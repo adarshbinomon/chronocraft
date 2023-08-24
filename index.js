@@ -9,6 +9,8 @@ const { get } = require('http');
 
 const app = express();
 
+app.use(nocache());
+
 //set view engine
 // app.set("view engine","ejs")
 
