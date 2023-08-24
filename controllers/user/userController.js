@@ -1,7 +1,8 @@
-const User = require('../model/userModel');
+const User = require('../../model/userModel');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
-const { EMAIL, PASSWORD } = require('../env/env');
+const dotenv = require('dotenv');
+dotenv.config({path: '.env'})
 
 // password encryption
 const securePassword = async(password) => {
@@ -24,6 +25,7 @@ const generateOtp = () => {
 const sendMail = async (name, email) => {
     try {
         const otp = generateOtp();
+        console.log(process.env.EMAIL,process.env.PASSWORD);
 
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
@@ -31,9 +33,9 @@ const sendMail = async (name, email) => {
             secure: false,
             requireTLS: true,
             auth: {
-                user: EMAIL,
-                pass: PASSWORD,
-            },
+                user: process.env.EMAIL,
+                pass: process.env.PASSWORD
+            }
         });
 
         const mailOptions = {
@@ -125,10 +127,42 @@ const loadLogin = async (req,res)=>{
     }
 }
 
+//user login
+
+const userLogin = async(req,res)=>{
+    try {
+        const email = req.body.email;
+        const password = req.body.password;
+
+        const userData = await User.findOne({email: email})
+        if(userData){
+            const passwordMatch = await bcrypt.compare(password,userData.password)
+            if(passwordMatch && userData.isAdmin===0){
+                req.session.user_id = userData._id;
+                console.log(userData);
+                res.redirect('/');
+            }
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+//load home
+
+const loadHome = async (req,res)=>{
+    try {
+        res.render('home')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 module.exports = {
     loadRegister,
     addUser,
     verifyOtp,
-    loadLogin
+    loadLogin,
+    userLogin,
+    loadHome
 };

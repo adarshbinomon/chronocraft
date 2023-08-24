@@ -19,7 +19,7 @@ const bodyParser = require('body-parser');
 admin_route.use(bodyParser.json());
 admin_route.use(bodyParser.urlencoded({ extended: true }));
   
-const adminController = require("../controllers/adminController");
+const adminController = require("../controllers/admin/adminController");
 
 //routes
 

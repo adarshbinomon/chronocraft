@@ -2,6 +2,7 @@ const express = require("express");
 const user_route = express();
 const session = require('express-session');
 const config = require("../config/config")
+const auth = require('../middleware/userAuth')
 
 user_route.use(session({
     secret: config.sessionSecret,
@@ -16,13 +17,15 @@ const bodyParser = require('body-parser');
 user_route.use(bodyParser.json());
 user_route.use(bodyParser.urlencoded({ extended: true }));
 
-const userController = require("../controllers/userController");
+const userController = require("../controllers/user/userController");
 
 
-user_route.get('/signup', userController.loadRegister)
+user_route.get('/', userController.loadHome)
+user_route.get('/signup',auth.isLogOut,userController.loadRegister)
 // user_route.get('/otpverify')
-user_route.post('/signup', userController.addUser)
+user_route.post('/signup',userController.addUser)
 user_route.post('/signup/otpverify', userController.verifyOtp)
-user_route.get('/login',userController.loadLogin)
+user_route.get('/login',auth.isLogOut,userController.loadLogin)
+user_route.post('/login',userController.userLogin)
 
-module.exports = user_route;   
+module.exports = user_route;    

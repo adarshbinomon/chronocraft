@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const User = require('../model/userModel');
+const User = require('../../model/userModel');
 
 
 
@@ -20,7 +20,7 @@ const loadLogin = async(req,res)=>{
 const adminLogin = async(req,res)=>{
     try {
         const email = req.body.email;
-    const password = req.body.password;
+        const password = req.body.password;
 
     const adminData = await User.findOne({email: email})
     if(adminData){
