@@ -14,11 +14,14 @@ const app = express();
 
 //routes
 const userRoute = require('./routes/userRoutes')
+const adminRoute = require('./routes/adminRoutes')
 app.use(logger('dev'))
 app.use('/',userRoute)
+app.use('/admin',adminRoute)
 
 //load assets
 app.use('/assets',express.static(path.resolve(__dirname,"public/assets")))
+app.use('/assetsbackend',express.static(path.resolve(__dirname,"public/assetsbackend")))
 
 //start server
 app.listen(3000,()=>{
