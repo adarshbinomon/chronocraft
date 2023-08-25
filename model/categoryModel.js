@@ -2,27 +2,23 @@ const mongoose = require("mongoose");
 
 const categorySchema = new mongoose.Schema({
 
-    category: {
+    name: {
         type: String,
         required: true
     },
     description: {
-        type: String,
-        required: true
+        type: String
     },
-    phoneNumber: {
-        type: String,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    isAdmin:{
+    isListed: {
         type: Number,
-        required: true
-    }
+        required: true,
+        default: 0
+    },
+    image: {
+        type: String
+    },
+    
 })
 
     
-module.exports = mongoose.model('User',userSchema)
+module.exports = mongoose.model('Category',categorySchema)
