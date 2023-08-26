@@ -88,11 +88,24 @@ const updateCategory = async (req,res)=>{
     }
 }
 
+//delete category
+
+const deleteCategory = async(req,res)=>{
+    try {
+        const id = req.params.id;
+        await Category.findByIdAndDelete(id)
+        res.redirect('/admin/categories')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 module.exports = {
     loadCategories,
     addCategory,
     editCategory,
-    updateCategory
+    updateCategory,
+    deleteCategory
 }

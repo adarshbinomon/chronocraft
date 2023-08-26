@@ -53,5 +53,6 @@ admin_route.get('/categories',auth.isLogIn,categoryController.loadCategories)
 admin_route.post('/categories',upload.single('image'),categoryController.addCategory)
 admin_route.get('/categories-edit/:id',categoryController.editCategory)
 admin_route.post('/categories-edit/:id',upload.single('image'),categoryController.updateCategory)
+admin_route.get('/categories-delete/:id',categoryController.deleteCategory)
 
 module.exports = admin_route;
