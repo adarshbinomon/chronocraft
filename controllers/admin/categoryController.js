@@ -5,7 +5,9 @@ const Category = require('../../model/categoryModel')
 
 const loadCategories = async (req,res) =>{
     try {
-        res.render('categories')
+        const categories = await Category.find();
+        req.session.categories = categories;
+        res.render('categories',{categories: categories})
     } catch (error) {
         console.log(error.message);
     }
@@ -26,17 +28,71 @@ const addCategory = async(req,res)=>{
         category = await category.save();
     
         if(category){
-            res.render('categories',{message: 'Category successfully added'})
+            res.redirect('/admin/categories')
         }else{
-            res.render('categories',{message:'Category adding failed.'})
+            res.render('categories',{message:'Category adding failed.'},{categories: req.session.categories})
         }
     } catch (error) {
         console.log(error.message);
     }
 }
 
+// edit category
+
+const editCategory = async (req,res) =>{
+    try {
+        const id = req.params.id;
+        Category.findById(id).then((data)=>{
+            console.log(id);
+            console.log(data);
+            res.render('categoryEdit', {data: data} )
+        })
+        .catch((error)=>{
+            console.log(error);
+        })
+            
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+//update category
+
+const updateCategory = async (req,res)=>{
+    try { console.log(req.body);
+        console.log(req.file);
+        const id = req.params.id;
+        let data;
+        if(req.fiile){
+        data = {
+            _id: id,
+            name: req.body.name,
+            image: req.file.filename,
+            isListed: req.body.isListed,
+            description: req.body.description
+        }}else{
+            data = {
+                _id: id,
+            name: req.body.name,
+            isListed: req.body.isListed,
+            description: req.body.description
+            }
+        }
+        console.log(data);
+        await Category.findByIdAndUpdate(id,data)
+
+        res.redirect('/admin/categories')
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
 
 module.exports = {
     loadCategories,
-    addCategory
+    addCategory,
+    editCategory,
+    updateCategory
 }
