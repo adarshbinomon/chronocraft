@@ -19,7 +19,7 @@ admin_route.use(session({
   }));
 
   //multer
-  const storage = multer.diskStorage({
+  const categoryStorage = multer.diskStorage({
     destination :(req,file,cb) => {
       cb(null,path.join(__dirname, '../public/assetsbackend/imgs/category'))
     },
@@ -27,7 +27,17 @@ admin_route.use(session({
       cb(null, Date.now() +'-'+ file.originalname)
     }
   })
-  const upload = multer({storage : storage})
+  const categoryUpload = multer({storage : categoryStorage})
+  
+  const productStorage = multer.diskStorage({
+    destination :(req,file,cb) => {
+      cb(null,path.join(__dirname, '../public/assetsbackend/imgs/products'))
+    },
+    filename : (req, file, cb) => {
+      cb(null, Date.now() +'-'+ file.originalname)
+    }
+  })
+  const productUpload = multer({storage : productStorage})
 
 
   //routes
@@ -40,6 +50,8 @@ admin_route.use(bodyParser.urlencoded({ extended: true }));
   
 const adminController = require("../controllers/admin/adminController");
 const categoryController =  require('../controllers/admin/categoryController')
+const productController =  require('../controllers/admin/productController')
+const userManagementController =  require('../controllers/admin/userManagementController')
 const { isLogIn } = require("../middleware/userAuth");
 
 //routes
@@ -50,9 +62,21 @@ admin_route.get('/logout',auth.isLogIn,adminController.logOut)
 admin_route.post('/login',adminController.adminLogin)
 
 admin_route.get('/categories',auth.isLogIn,categoryController.loadCategories)
-admin_route.post('/categories',upload.single('image'),categoryController.addCategory)
-admin_route.get('/categories-edit/:id',categoryController.editCategory)
-admin_route.post('/categories-edit/:id',upload.single('image'),categoryController.updateCategory)
+admin_route.post('/categories',categoryUpload.single('image'),categoryController.addCategory)
+admin_route.get('/categories-edit/:id',categoryController.loadEditCategory)
+admin_route.post('/categories-edit/:id',categoryUpload.single('image'),categoryController.updateCategory)
 admin_route.get('/categories-delete/:id',categoryController.deleteCategory)
+
+admin_route.get('/add-product',productController.loadAddProduct)
+admin_route.post('/add-product',productUpload.array('image'),productController.addProduct)
+admin_route.get('/products',productController.loadProducts)
+admin_route.get('/edit-product/:id',productController.loadEditProduct)
+admin_route.post('/edit-product/:id',productUpload.array('image'),productController.editProduct)
+admin_route.get('/delete-product/:id',productController.deleteProduct)
+
+admin_route.get('/users', userManagementController.loadUsers)
+admin_route.get('/edit-user/:id', userManagementController.loadEditUser)
+admin_route.post('/edit-user/:id', userManagementController.editUser)
+admin_route.get('/block-user/:id', userManagementController.blockOrUnblockUser)
 
 module.exports = admin_route;

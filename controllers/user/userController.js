@@ -74,6 +74,7 @@ const loadRegister = async (req, res) => {
 const addUser = async (req, res) => {
     try {
         const userData = req.body;
+        console.log(userData);
 
         if (userData) {
             const otp = await sendMail(userData.name, userData.email);
@@ -137,10 +138,12 @@ const userLogin = async(req,res)=>{
         const userData = await User.findOne({email: email})
         if(userData){
             const passwordMatch = await bcrypt.compare(password,userData.password)
-            if(passwordMatch && userData.isAdmin===0){
+            if(passwordMatch && userData.isAdmin===0 && userData.isActive ===true){
                 req.session.user_id = userData._id;
                 console.log(userData);
                 res.redirect('/');
+            }else{
+                res.render('login',{message: 'user blocked by admin'})
             }
         }
     } catch (error) {

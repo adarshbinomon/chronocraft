@@ -37,9 +37,9 @@ const addCategory = async(req,res)=>{
     }
 }
 
-// edit category
+// load edit category
 
-const editCategory = async (req,res) =>{
+const loadEditCategory = async (req,res) =>{
     try {
         const id = req.params.id;
         Category.findById(id).then((data)=>{
@@ -59,11 +59,12 @@ const editCategory = async (req,res) =>{
 //update category
 
 const updateCategory = async (req,res)=>{
-    try { console.log(req.body);
+    try { 
+        console.log(req.body);
         console.log(req.file);
         const id = req.params.id;
-        let data;
-        if(req.fiile){
+        let data; 
+        if(req.file){
         data = {
             _id: id,
             name: req.body.name,
@@ -78,7 +79,7 @@ const updateCategory = async (req,res)=>{
             description: req.body.description
             }
         }
-        console.log(data);
+        console.log(data); 
         await Category.findByIdAndUpdate(id,data)
 
         res.redirect('/admin/categories')
@@ -105,7 +106,7 @@ const deleteCategory = async(req,res)=>{
 module.exports = {
     loadCategories,
     addCategory,
-    editCategory,
+    loadEditCategory,
     updateCategory,
     deleteCategory
 }
