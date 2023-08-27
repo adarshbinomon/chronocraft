@@ -1,4 +1,6 @@
 const User = require('../../model/userModel');
+const Product = require('../../model/productModel');
+const Category = require('../../model/categoryModel');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
@@ -155,7 +157,22 @@ const userLogin = async(req,res)=>{
 
 const loadHome = async (req,res)=>{
     try {
-        res.render('home')
+        const categories = await Category.find();
+        const products = await Product.find();
+        console.log(categories);
+        res.render('home',{categories: categories , products: products})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+//load product page
+
+const loadProduct =  async (req,res)=>{
+    try {
+        const id = req.params.id;
+        const product = await Product.findById(id);
+        res.render('productDetails',{product: product})
     } catch (error) {
         console.log(error.message);
     }
@@ -167,5 +184,6 @@ module.exports = {
     verifyOtp,
     loadLogin,
     userLogin,
-    loadHome
+    loadHome,
+    loadProduct
 };
