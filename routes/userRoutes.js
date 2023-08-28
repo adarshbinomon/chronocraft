@@ -28,5 +28,6 @@ user_route.post('/signup/otpverify', userController.verifyOtp)
 user_route.get('/login',auth.isLogOut,userController.loadLogin)
 user_route.post('/login',userController.userLogin)
 user_route.get('/product/:id',userController.loadProduct)
+user_route.get('/category/:id',userController.loadCategory)
 
 module.exports = user_route;    

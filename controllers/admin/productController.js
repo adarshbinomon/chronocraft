@@ -82,7 +82,7 @@ const editProduct = async (req,res)=>{
         console.log(fileNames);
 
         let data; 
-        if(req.files){
+        if(req.files.length){
             data = {
                 _id: id,
                 productName : req.body.productName,

@@ -178,6 +178,18 @@ const loadProduct =  async (req,res)=>{
     }
 }
 
+const loadCategory =async (req,res)=>{
+    try {
+        const id = req.params.id;
+        const category = await Category.findById(id);
+        const products = await Product.find({category: category.name})
+        console.log(products);
+        res.render('categoryFind',{products : products})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 module.exports = {
     loadRegister,
     addUser,
@@ -185,5 +197,6 @@ module.exports = {
     loadLogin,
     userLogin,
     loadHome,
-    loadProduct
+    loadProduct,
+    loadCategory
 };

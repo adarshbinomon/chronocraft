@@ -1886,9 +1886,9 @@
                         <% for (let i = 0; i < categories.length; i++) { %>   
                         <div class="card-1">
                             <figure class=" img-hover-scale overflow-hidden">
-                                <a href="shop-grid-right.html"><img src="/assetsbackend/imgs/category/<%=categories[i].image%>" alt=""></a>
+                                <a href="/category/<%=categories[i]._id%>"><img src="/assetsbackend/imgs/category/<%=categories[i].image%>" alt=""></a>
                             </figure>
-                            <h5><a href="shop-grid-right.html"><%=categories[i].name%></a></h5>
+                            <h5><a href="/category/<%=categories[i]._id%>"><%=categories[i].name%></a></h5>
                         </div>
                         <% } %>
 
