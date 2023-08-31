@@ -15,27 +15,64 @@ const loadCategories = async (req,res) =>{
 
 // add category
 
-const addCategory = async(req,res)=>{
+// const addCategory = async(req,res)=>{
+//     try {
+//         let category = new Category({
+//             name : req.body.name,
+//             description : req.body.description,
+//             isListed : req.body.isListed,
+//             image : req.file.filename
+//         })
+//         console.log(category);
+    
+//         category = await category.save();
+    
+//         if(category){
+//             res.redirect('/admin/categories')
+//         }else{
+//             res.render('categories',{message:'Category adding failed.'},{categories: req.session.categories})
+//         }
+//     } catch (error) {
+//         console.log(error.message);
+//     }
+// }
+const addCategory = async (req, res) => {
     try {
         let category = new Category({
-            name : req.body.name,
-            description : req.body.description,
-            isListed : req.body.isListed,
-            image : req.file.filename
-        })
+            name: req.body.name,
+            description: req.body.description,
+            isListed: req.body.isListed,
+            image: req.file.filename
+        });
+
         console.log(category);
-    
+
         category = await category.save();
-    
-        if(category){
-            res.redirect('/admin/categories')
-        }else{
-            res.render('categories',{message:'Category adding failed.'},{categories: req.session.categories})
+
+        if (category) {
+            res.status(200).redirect('/admin/categories');
+        } else {
+            res.status(400).render('categories', {
+                message: 'Category adding failed.',
+                categories: req.session.categories
+            });
         }
     } catch (error) {
-        console.log(error.message);
+        if (error.code === 11000 && error.keyPattern && error.keyPattern.name === 1) {
+            res.status(409).render('categories', {
+                message: 'Category name already exists.',
+                categories: req.session.categories
+            });
+        } else {
+            console.error(error.message);
+            res.status(500).render('categories', {
+                message: 'An error occurred while adding the category.',
+                categories: req.session.categories
+            });
+        }
     }
-}
+};
+
 
 // load edit category
 
