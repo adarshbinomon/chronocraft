@@ -243,6 +243,7 @@
                                                 <div class="d-flex"> 
                                                     <% for(var i=0;i<data.image.length;i++){ %>
                                                         <img src="/assetsbackend/imgs/products/<%= data.image[i] %>" alt="<%= data.image[1] %>" width="100px" height="150px">
+                                                        <div><a class="btn-sm text  btn-danger" href="/admin/delete-image/<%=data._id%>/<%= data.image[i]%>" onclick="return confirm('This action is going to delete the selected image.')">X</a></div>
                                                     <% } %>
                                                 </div>
                                                 <input multiple name="image" id="image" class="form-control" type="file">
@@ -268,6 +269,10 @@
                                                     <div class="mb-4">
                                                         <label for="product_name" class="form-label">Quantity</label>
                                                         <input type="text" class="form-control" value="<%=data.quantity%>" name="quantity">
+                                                    </div>
+                                                    <div class="mb-4">
+                                                        <label for="product_name" class="form-label"></label>
+                                                        <input type="hidden" class="form-control" value="<%=data.image%>" name="imageImport">
                                                     </div>
                                                 </div> <!-- row.// -->
                                             </div>

@@ -1,6 +1,7 @@
 const Category = require('../../model/categoryModel')
 
 
+
 //load categories
 
 const loadCategories = async (req,res) =>{
@@ -50,6 +51,7 @@ const addCategory = async (req, res) => {
         category = await category.save();
 
         if (category) {
+            req.flash('successMessage', 'Category added successfully!');
             res.status(200).redirect('/admin/categories');
         } else {
             res.status(400).render('categories', {
@@ -82,7 +84,9 @@ const loadEditCategory = async (req,res) =>{
         Category.findById(id).then((data)=>{
             console.log(id);
             console.log(data);
-            res.render('categoryEdit', {data: data} )
+            res.render('categoryEdit', {data: data, errorMsg: req.session.errorMsg} )
+            req.session.errorMsg = false;
+
         })
         .catch((error)=>{
             console.log(error);
@@ -96,10 +100,10 @@ const loadEditCategory = async (req,res) =>{
 //update category
 
 const updateCategory = async (req,res)=>{
+    const id = req.params.id;
     try { 
         console.log(req.body);
         console.log(req.file);
-        const id = req.params.id;
         let data; 
         if(req.file){
         data = {
@@ -118,11 +122,17 @@ const updateCategory = async (req,res)=>{
         }
         console.log(data); 
         await Category.findByIdAndUpdate(id,data)
+        req.session.errorMsg = false;
 
         res.redirect('/admin/categories')
-
+        console.log(req.session.errorMsg);
     } catch (error) {
         console.log(error.message);
+        // res.location.reload();
+        req.session.errorMsg = 'Category duplicate found!, Update unsuccessful';
+        console.log(req.session.errorMsg);
+
+        res.redirect('/admin/categories-edit/'+id);
     }
 }
 

@@ -5,10 +5,16 @@ const config = require("../config/config")
 const auth = require('../middleware/adminAuth');
 const multer = require('multer')
 const path = require('path')
+const flash = require('express-flash');
+
 // const bodyParser = require('bodyparser')
 
 admin_route.use(express.json());
 admin_route.use(express.urlencoded({extended: true}));
+
+//flash
+admin_route.use(flash());
+
 
 //session
 
@@ -73,6 +79,7 @@ admin_route.get('/products',productController.loadProducts)
 admin_route.get('/edit-product/:id',productController.loadEditProduct)
 admin_route.post('/edit-product/:id',productUpload.array('image'),productController.editProduct)
 admin_route.get('/delete-product/:id',productController.deleteProduct)
+admin_route.get('/delete-image/:id/:img',productController.deleteImage)
 
 admin_route.get('/users', userManagementController.loadUsers)
 admin_route.get('/edit-user/:id', userManagementController.loadEditUser)

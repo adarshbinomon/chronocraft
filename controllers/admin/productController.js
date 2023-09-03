@@ -74,12 +74,15 @@ const loadEditProduct = async (req,res)=>{
 const editProduct = async (req,res)=>{
     try {
         console.log(req.body);
-        console.log(req.files);
+        // console.log(req.files);
         const id = req.params.id;
         console.log('object id');
         console.log(id);
-        const fileNames = req.files.map(file => file.filename); 
-        console.log(fileNames);
+        const fileNamesU = req.files.map(file => file.filename); 
+        console.log(fileNamesU);
+        const imgImp = req.body.imageImport.split(',')
+        const imgArr = [...imgImp,...fileNamesU];
+        console.log(imgArr);
 
         let data; 
         if(req.files.length){
@@ -92,7 +95,7 @@ const editProduct = async (req,res)=>{
                 regularPrice: req.body.regularPrice,
                 salePrice: req.body.salePrice,
                 quantity: req.body.quantity,
-                image: fileNames
+                image: imgArr
         }}else{
             data = {
                 _id: id,
@@ -128,6 +131,32 @@ const deleteProduct = async(req,res)=>{
     }
 }
 
+//delete product image
+
+const deleteImage = async (req, res) => {
+    const id = req.params.id;
+    const img = req.params.img;
+
+    try {
+        const updatedDocument = await Product.findOneAndUpdate(
+            { _id: id },
+            { $pull: { image: img } },
+            { new: true }
+        );
+
+        if (!updatedDocument) {
+            console.log('Document not found');
+            return res.status(404).json({ message: 'Document not found' });
+        }
+
+        console.log('Element removed successfully');
+        res.redirect('/admin/edit-product/'+id)
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'An error occurred while deleting the element' });
+    }
+};
+
 
 module.exports = {
     loadAddProduct,
@@ -135,5 +164,6 @@ module.exports = {
     loadProducts,
     loadEditProduct,
     editProduct,
-    deleteProduct
+    deleteProduct,
+    deleteImage
 }
