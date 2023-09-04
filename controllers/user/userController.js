@@ -142,16 +142,30 @@ const userLogin = async(req,res)=>{
             const passwordMatch = await bcrypt.compare(password,userData.password)
             if(passwordMatch && userData.isAdmin===0 && userData.isActive ===true){
                 req.session.user_id = userData._id;
+                req.session.isActive = userData.isActive;
+                req.session.user = userData;
                 console.log(userData);
+                console.log(userData.isActive);
                 res.redirect('/');
             }else{
-                res.render('login',{message: 'user blocked by admin'})
+                res.render('login',{message: 'Access to your account is currently  blocked by admin, contact admin for more details'})
             }
         }
     } catch (error) {
         console.log(error.message);
     }
 }
+
+//user logout
+
+const userLogOut = async(req,res)=>{
+    try {
+        req.session.destroy();
+        res.redirect('/')
+    } catch (error) {
+        console.log(error.message);
+    }
+} 
 
 //load home
 
@@ -160,7 +174,12 @@ const loadHome = async (req,res)=>{
         const categories = await Category.find();
         const products = await Product.find();
         console.log(categories);
-        res.render('home',{categories: categories , products: products})
+        const userData = req.session.user;
+        res.render('home',{
+            categories: categories ,
+            products: products,
+            userData: userData
+        })
     } catch (error) {
         console.log(error.message);
     }
@@ -190,13 +209,68 @@ const loadCategory =async (req,res)=>{
     }
 }
 
+//load cart
+
+const loadCart = async (req,res)=>{
+    try {
+        res.render('cart')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+//add to cart
+
+const addToCart = async (req,res)=>{
+    try {
+        console.log(req.body);
+        const productId = req.body.productId;
+        const quantity = parseInt(req.body.quantity);
+        console.log('productId-----'+productId+'   quantity-----' + quantity);
+
+        if(isNaN(quantity) || quantity <= 0){
+            res.status(400).json({ message: 'Invalid quantity' });
+        }
+        
+        const userId = req.session.user_id;
+        console.log('userId------'+userId);
+        const user = await User.findById(userId);
+
+        if(!user){
+            res.status(404).json({message: 'user not found'})
+        }
+
+        const existingItem = user.cart.items.find((item) => (
+            item.productId.equals(productId)
+          ));
+      
+        if (existingItem) {
+            existingItem.quantity += quantity;
+          } else {
+            user.cart.items.push({ productId, quantity });
+          }
+      
+          await user.save();
+
+          console.log('product added to cart')
+
+          res.redirect('/cart')
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 module.exports = {
     loadRegister,
     addUser,
     verifyOtp,
     loadLogin,
     userLogin,
+    userLogOut,
     loadHome,
     loadProduct,
-    loadCategory
+    loadCategory,
+    loadCart,
+    addToCart
 };

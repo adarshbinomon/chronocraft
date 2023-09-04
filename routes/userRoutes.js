@@ -27,7 +27,11 @@ user_route.post('/signup',userController.addUser)
 user_route.post('/signup/otpverify', userController.verifyOtp)
 user_route.get('/login',auth.isLogOut,userController.loadLogin)
 user_route.post('/login',userController.userLogin)
+user_route.get('/logout',userController.userLogOut)
 user_route.get('/product/:id',userController.loadProduct)
 user_route.get('/category/:id',userController.loadCategory)
+user_route.get('/cart',auth.isLogIn, userController.loadCart)
+user_route.post('/add-to-cart', userController.addToCart)
+
 
 module.exports = user_route;    
