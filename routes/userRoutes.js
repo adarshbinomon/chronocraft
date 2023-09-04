@@ -18,6 +18,7 @@ user_route.use(bodyParser.json());
 user_route.use(bodyParser.urlencoded({ extended: true }));
 
 const userController = require("../controllers/user/userController");
+const cartController = require("../controllers/user/cartController");
 
 
 user_route.get('/',userController.loadHome)
@@ -30,8 +31,9 @@ user_route.post('/login',userController.userLogin)
 user_route.get('/logout',userController.userLogOut)
 user_route.get('/product/:id',userController.loadProduct)
 user_route.get('/category/:id',userController.loadCategory)
-user_route.get('/cart',auth.isLogIn, userController.loadCart)
-user_route.post('/add-to-cart', userController.addToCart)
+
+user_route.get('/cart',auth.isLogIn, cartController.loadCart)
+user_route.post('/add-to-cart', cartController.addToCart)
 
 
 module.exports = user_route;    
