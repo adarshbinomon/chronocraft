@@ -8,9 +8,13 @@ const loadCart = async (req,res)=>{
     try {
         const userCart = await User.findOne({_id: req.session.user_id}).populate('cart.productId')
         // console.log(JSON.stringify(userCart));
-        const cartItems = userCart.items;
+        let grandTotal=0;
+        for(let i =0;i<userCart.cart.length;i++){
+            grandTotal= grandTotal + parseInt(userCart.cart[i].productId.salePrice)* parseInt(userCart.cart[i].quantity)
+        }
+        console.log('grandTotal'+grandTotal);
         // console.log(cartItems);
-        res.render('cart',{userCart: userCart})
+        res.render('cart',{userCart: userCart,grandTotal: grandTotal})
     } catch (error) {
         console.log(error.message);
     }
@@ -23,14 +27,14 @@ const addToCart = async (req,res)=>{
         console.log(req.body);
         const productId = req.body.productId;
         const quantity = parseInt(req.body.quantity);
-        console.log('productId-----'+productId+'   quantity-----' + quantity);
+        console.log('ADDTOCART productId-----'+productId+'   quantity-----' + quantity);
 
         if(isNaN(quantity) || quantity <= 0){
             res.status(400).json({ message: 'Invalid quantity' });
         }
         
         const userId = req.session.user_id;
-        console.log('userId------'+userId);
+        console.log('ADDTOCART userId------'+userId);
         const user = await User.findById(userId);
 
         if(!user){
@@ -85,8 +89,50 @@ const changeQuantity = async (req,res)=>{
     }
 }
 
+//dele cart item
+const deleteCartItem = async (req, res) => {
+    try {
+      const userId = req.session.user_id;
+      const productIdToDelete = req.params.id; 
+  
+      console.log('productId to remove'+productIdToDelete);
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      console.log('user'+user);
+      user.cart = user.cart.filter((item) =>
+        !item.productId.equals(productIdToDelete)
+      );
+  
+      await user.save();
+  
+      console.log("Product removed from cart");
+  
+      res.redirect('/cart')
+    } catch (error) {
+      console.error(error.message);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  };
+
+  //checkout
+
+  const loadCheckout = async (req,res)=>{
+    const user = await User.findById(req.session.user_id)
+    const userCart = await User.findOne({_id: req.session.user_id}).populate('cart.productId')
+
+    console.log(user);
+
+    res.render('checkout',{user: user,userCart: userCart})
+  }
+
 module.exports = {
     loadCart,
     addToCart,
-    changeQuantity
+    changeQuantity,
+    deleteCartItem,
+    loadCheckout
 }

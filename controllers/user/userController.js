@@ -197,6 +197,8 @@ const loadProduct =  async (req,res)=>{
     }
 }
 
+//load category specific products
+
 const loadCategory =async (req,res)=>{
     try {
         const id = req.params.id;
@@ -209,7 +211,58 @@ const loadCategory =async (req,res)=>{
     }
 }
 
+//load user account page
 
+const loadaccount = async (req,res)=>{
+    try {
+        const user = await User.findById(req.session.user_id);
+        console.log('user>-----'+user);
+        console.log('user.address.length>-----'+user.address.length);
+        res.render('userAccount',{user:user})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+// load edit address
+
+const loadEditAddress = async (req,res)=>{
+    try {
+        res.render('editAddress')
+    } catch (error) {
+        
+    }
+}
+
+// load add address
+
+const loadAddAddress = async (req,res)=>{
+    try {
+        res.render('addAddress')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+//add address
+
+const addAddress =  async (req,res)=>{
+    try {
+        const address = req.body;
+        console.log('ADDADDRESS- address:');
+        console.log(address);
+        const user = await User.findById(req.session.user_id);
+        console.log('ADDADDRESS- user:'+user);
+
+        user.address.push(address);
+        await user.save();
+
+        res.redirect('account')
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 module.exports = {
     loadRegister,
     addUser,
@@ -219,6 +272,10 @@ module.exports = {
     userLogOut,
     loadHome,
     loadProduct,
-    loadCategory
+    loadCategory,
+    loadaccount,
+    loadEditAddress,
+    loadAddAddress,
+    addAddress
     
 };

@@ -32,7 +32,10 @@ const userSchema = new mongoose.Schema({
          ref: 'Product', 
        },     
        quantity: Number,  
-   }]
+   }],
+   address: {
+    type: Array
+   }
     
 
 })
