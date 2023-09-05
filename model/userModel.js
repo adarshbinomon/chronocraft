@@ -26,16 +26,14 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-    cart : {
-        items: [{
+    cart : [{
        productId: {
          type: mongoose.Schema.Types.ObjectId,
          ref: 'Product', 
-       },
-       size: String,     
+       },     
        quantity: Number,  
    }]
-}
+    
 
 })
 

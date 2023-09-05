@@ -143,3 +143,7 @@ const x = {
   __v: 6,
   isActive: true,
 };
+function changeQuantity(productId,count,Subtotal,price){
+    alert(price)
+    // userCart.cart[i].productId.salePrice * userCart.cart[i].quantity
+    document.getElementById("subTotal").innerHTML= Subtotal+(price*count); 

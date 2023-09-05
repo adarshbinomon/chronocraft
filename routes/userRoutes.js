@@ -33,7 +33,9 @@ user_route.get('/product/:id',userController.loadProduct)
 user_route.get('/category/:id',userController.loadCategory)
 
 user_route.get('/cart',auth.isLogIn, cartController.loadCart)
-user_route.post('/add-to-cart', cartController.addToCart)
+user_route.post('/add-to-cart',auth.isLogIn, cartController.addToCart)
+user_route.post('/change-quantity', cartController.changeQuantity)
+
 
 
 module.exports = user_route;    

@@ -15,6 +15,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link rel="stylesheet" href="/assets/css/main.css?v=3.4">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 </head>
 
@@ -924,7 +925,7 @@
                                                 <!-- <div class="detail-qty  radius"> -->
                                                     <div class="form-outline" style="width: 100px;">
                                                         <label class="form-label" for="typeNumber">Quantity</label>
-                                                        <input value="1" min="1" type="number" id="quantity" name="quantity" class="qty-val" />
+                                                        <input value="1" min="1" max="<%= product.quantity%>" type="number" id="quantity" name="quantity" class="qty-val" />
                                                     </div>
 
                                                     <input type="hidden" class="productId" name="productId" value="<%= product._id %>">
