@@ -118,15 +118,33 @@ const deleteCartItem = async (req, res) => {
     }
   };
 
-  //checkout
+  //load checkout
 
   const loadCheckout = async (req,res)=>{
+   try {
     const user = await User.findById(req.session.user_id)
     const userCart = await User.findOne({_id: req.session.user_id}).populate('cart.productId')
 
+
     console.log(user);
+    console.log(userCart.address[0]);
 
     res.render('checkout',{user: user,userCart: userCart})
+   
+  } catch (error) {
+    console.log(error.message);  
+   }
+  }
+
+  //checkout
+
+  const checkout = async (req,res)=>{
+    try {
+      console.log('CHECKOUT- order details from checkout POST');
+      console.log(req.body);
+    } catch (error) {
+      
+    }
   }
 
 module.exports = {
@@ -134,5 +152,6 @@ module.exports = {
     addToCart,
     changeQuantity,
     deleteCartItem,
-    loadCheckout
+    loadCheckout,
+    checkout
 }

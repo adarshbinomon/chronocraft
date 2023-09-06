@@ -750,6 +750,7 @@
                         <div class="divider mt-50 mb-50"></div>
                     </div>
                 </div>
+                <form action="/checkout" method="post">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-25">
@@ -760,7 +761,10 @@
                             <div class="col-lg-6">
                                 <div class="card mb-3 mb-lg-0">
                                     <div class="card-header">
-                                        <h5 class="mb-0">Address <%= i+1 %></h5>
+                                        <input class="form-check-input" value="<%= JSON.stringify(user.address[i]) %>" type="radio" name="address" id="address">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                                <h5 class="mb-0">Address <%= i+1 %></h5>
+                                            </label>
                                     </div>
                                     <div class="card-body">
                                         <address><%=user.address[i].name%><br> <%=user.address[i].billing_address%>, <%=user.address[i].billing_address2%>, <%=user.address[i].city%><br><%=user.address[i].state%><br><%=user.address[i].zipcode%><br><%=user.address[i].phone%><br><%=user.address[i].email%></address>
@@ -794,13 +798,18 @@
                                             <td>
                                                 <h5><a href="shop-product-full.html"><%=userCart.cart[i].productId.productName%></a></h5> <span class="product-qty">x <%=userCart.cart[i].quantity%></span>
                                             </td>
-                                            <td>₹<span><%=userCart.cart[i].productId.salePrice%></span></td>
-                                            <%sum += userCart.cart[i].productId.salePrice %>
+                                            <td>₹<span><%=userCart.cart[i].productId.salePrice * userCart.cart[i].quantity%></span></td>
+                                            <%sum += userCart.cart[i].productId.salePrice * userCart.cart[i].quantity%>
+                                            <input type="hidden" name="productId" value="<%=userCart.cart[i].productId._id%>">
+                                            <input type="hidden" name="salePrice" value="<%=userCart.cart[i].productId.salePrice%>">
+                                            <input type="hidden" name="quantity" value="<%=userCart.cart[i].quantity%>">
                                         </tr>
                                         <% } %>
                                         <tr>
                                             <th>SubTotal</th>
                                             <td class="product-subtotal" colspan="2">₹<%=sum%></td>
+                                            <input type="hidden" name="total" value="<%=sum%> ">
+
                                         </tr>
                                         <tr>
                                             <th>Shipping</th>
@@ -820,32 +829,33 @@
                                 </div>
                                 <div class="payment_option">
                                     <div class="custome-radio">
-                                        <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios3" checked="">
+                                        <input class="form-check-input" required="" type="radio" name="payment_option" value="banktranfer" id="exampleRadios3" checked="">
                                         <label class="form-check-label" for="exampleRadios3" data-bs-toggle="collapse" data-target="#bankTranfer" aria-controls="bankTranfer">Direct Bank Transfer</label>
                                         <div class="form-group collapse in" id="bankTranfer">
                                             <p class="text-muted mt-5">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration. </p>
                                         </div>
                                     </div>
                                     <div class="custome-radio">
-                                        <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios4" checked="">
-                                        <label class="form-check-label" for="exampleRadios4" data-bs-toggle="collapse" data-target="#cashOnDelivery" aria-controls="checkPayment">Cash On Delivery</label>
+                                        <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios4" value="COD" checked="">
+                                        <label class="form-check-label" for="exampleRadios4" data-bs-toggle="collapse" data-target="#cashOnDelivery" aria-controls="checkPayment"  >Cash On Delivery</label>
                                         <div class="form-group collapse in" id="checkPayment">
                                             <p class="text-muted mt-5">Please send your cheque to Store Name, Store Street, Store Town, Store State / County, Store Postcode. </p>
                                         </div>
                                     </div>
                                     <div class="custome-radio">
-                                        <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios5" checked="">
-                                        <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal">Paypal</label>
+                                        <input class="form-check-input" required="" type="radio" name="payment_option" value="paypal" id="exampleRadios5" checked="">
+                                        <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#paypal" aria-controls="paypal"  >Paypal</label>
                                         <div class="form-group collapse in" id="paypal">
                                             <p class="text-muted mt-5">Pay via PayPal; you can pay with your credit card if you don't have a PayPal account.</p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <a href="#" class="btn btn-fill-out btn-block mt-30">Place Order</a>
+                            <button href="#" type="submit" class="btn btn-fill-out btn-block mt-30">Place Order</button>
                         </div>
                     </div>
                 </div>
+            </form>
             </div>
         </section>
     </main>
