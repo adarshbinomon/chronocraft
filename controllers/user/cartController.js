@@ -1,6 +1,7 @@
 const User = require('../../model/userModel');
 const Product = require('../../model/productModel');
 const Category = require('../../model/categoryModel');
+const Order = require('../../model/orderModel');
 
 //load cart
 
@@ -89,7 +90,7 @@ const changeQuantity = async (req,res)=>{
     }
 }
 
-//dele cart item
+//delete cart item
 const deleteCartItem = async (req, res) => {
     try {
       const userId = req.session.user_id;
@@ -138,15 +139,28 @@ const deleteCartItem = async (req, res) => {
 
   //checkout
 
-  const checkout = async (req,res)=>{
+  const checkout = async (req, res) => {
     try {
-      console.log('CHECKOUT- order details from checkout POST');
+      const userId = req.session.user_id;
+      const cart = await User.findById(req.session.user_id,{cart:1,_id:0})
+      const order = new Order({
+        customerId: userId,
+        quantity: req.body.quantity,
+        price: req.body.salePrice,
+        products: cart.cart,
+        totalAmount: req.body.GrandTotal,
+        shippingAddress: req.body.address,
+      });
+      const orderSuccess = await order.save();
+      if(orderSuccess) {
+
+        res.render('successPage')
+      }
       console.log(req.body);
     } catch (error) {
-      
+      console.log(error.message);
     }
-  }
-
+  };
 module.exports = {
     loadCart,
     addToCart,
