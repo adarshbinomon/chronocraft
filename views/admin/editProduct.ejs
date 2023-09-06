@@ -256,12 +256,17 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="row gx-2">
-                                                    <div class="col-sm-6 mb-3">
+                                                    <div class="row-sm-6 mb-3">
                                                         <label class="form-label">Category</label>
                                                         <select class="form-select" name="category">
                                                             <% for (var i = 0; i < category.length; i++) { %>
-                                                                <option value="<%= category[i].name %>"><%= category[i].name %></option>
+                                                                <option value="<%= category[i].name %>" <% if (data.category === category[i].name ) { %> selected <% } %>> <%= category[i].name %></option>
                                                             <% } %>
+                                                        </select>
+                                                        <label class="form-label">isListed</label>
+                                                        <select class="form-select" name="isListed">
+                                                                <option value="true" <% if (data.isListed) { %> selected <% } %>>true</option>
+                                                                <option value="false" <% if (!data.isListed) { %> selected <% } %>>false</option>
                                                         </select>
                                                         
                                                     </div>

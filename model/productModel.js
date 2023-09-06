@@ -37,7 +37,7 @@ const productSchema = new mongoose.Schema({
     isListed: {
         type: Boolean,
         required: true,
-        default: 1
+        default: true
     },
     image: {
         type: Array

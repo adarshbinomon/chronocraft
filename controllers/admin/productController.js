@@ -95,6 +95,7 @@ const editProduct = async (req,res)=>{
                 regularPrice: req.body.regularPrice,
                 salePrice: req.body.salePrice,
                 quantity: req.body.quantity,
+                isListed: req.body.isListed,
                 image: imgArr
         }}else{
             data = {
@@ -105,6 +106,7 @@ const editProduct = async (req,res)=>{
                 description: req.body.description,
                 regularPrice: req.body.regularPrice,
                 salePrice: req.body.salePrice,
+                isListed: req.body.isListed,
                 quantity: req.body.quantity
             }
         }

@@ -1,6 +1,7 @@
 const User = require('../../model/userModel');
 const Product = require('../../model/productModel');
 const Category = require('../../model/categoryModel');
+const Order = require('../../model/orderModel');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
@@ -171,8 +172,8 @@ const userLogOut = async(req,res)=>{
 
 const loadHome = async (req,res)=>{
     try {
-        const categories = await Category.find();
-        const products = await Product.find();
+        const categories = await Category.find({isListed: true});
+        const products = await Product.find({isListed: true});
         console.log(categories);
         const userData = req.session.user;
         res.render('home',{
@@ -216,9 +217,10 @@ const loadCategory =async (req,res)=>{
 const loadaccount = async (req,res)=>{
     try {
         const user = await User.findById(req.session.user_id);
+        const orders = await Order.find({ customerId: req.session.user_id });
         console.log('user>-----'+user);
         console.log('user.address.length>-----'+user.address.length);
-        res.render('userAccount',{user:user})
+        res.render('userAccount',{user:user,orders: orders})
     } catch (error) {
         console.log(error.message);
     }
@@ -230,7 +232,7 @@ const loadEditAddress = async (req,res)=>{
     try {
         res.render('editAddress')
     } catch (error) {
-        
+        console.log(error.message);
     }
 }
 
