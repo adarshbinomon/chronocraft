@@ -28,7 +28,7 @@ const generateOtp = () => {
 const sendMail = async (name, email) => {
     try {
         const otp = generateOtp();
-        console.log(process.env.EMAIL,process.env.PASSWORD);
+        console.log(otp);
 
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
@@ -108,9 +108,12 @@ const verifyOtp = async (req, res) => {
                 isAdmin: 0,
             });
             delete req.session.otp;
-            const savedUser = await user.save();
+            const savedUser = await user.save(); 
+            req.session.user_id= user._id;
+            req.session.isActive = userData.isActive;
+            req.session.user = userData;
             console.log(savedUser);
-            res.render('otpVerify', { message: 'User successfully registered!' });
+            res.redirect('/');
         } else {
             res.render('otpVerify', { message: 'OTP verification failed' });
         }
