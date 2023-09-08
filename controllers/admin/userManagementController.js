@@ -71,8 +71,8 @@ const blockOrUnblockUser = async (req,res)=>{
         }else{
             await User.findByIdAndUpdate(id,unBlock)
         }
-
-        res.redirect('/admin/users')
+        res.status(200).json({ message: 'User status updated successfully', user: user });
+        // res.redirect('/admin/users')
     } catch (error) {
         console.log(error.message);
     }

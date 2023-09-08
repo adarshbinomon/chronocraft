@@ -19,6 +19,7 @@ user_route.use(bodyParser.urlencoded({ extended: true }));
 
 const userController = require("../controllers/user/userController");
 const cartController = require("../controllers/user/cartController");
+const orderController = require("../controllers/user/orderController");
 
 
 user_route.get('/',userController.loadHome)
@@ -35,6 +36,7 @@ user_route.get('/account',auth.isLogIn, userController.loadaccount)
 user_route.get('/edit-address',auth.isLogIn, userController.loadEditAddress)
 user_route.get('/add-address',auth.isLogIn, userController.loadAddAddress)
 user_route.post('/add-address', userController.addAddress)
+user_route.get('/about', userController.loadAbout)
 
 
 user_route.get('/cart',auth.isLogIn, cartController.loadCart)
@@ -43,6 +45,8 @@ user_route.post('/change-quantity', cartController.changeQuantity)
 user_route.get('/remove-cart/:id', cartController.deleteCartItem)
 user_route.get('/checkout',auth.isLogIn, cartController.loadCheckout)
 user_route.post('/checkout', cartController.checkout)
+
+user_route.get('/order-details/:id',auth.isLogIn,orderController.loadOrderDetails)
 
 
 

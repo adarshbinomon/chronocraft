@@ -150,7 +150,7 @@ const userLogin = async(req,res)=>{
                 req.session.user = userData;
                 console.log(userData);
                 console.log(userData.isActive);
-                res.redirect('/');
+                res.redirect('');
             }else{
                 res.render('login',{message: 'Access to your account is currently  blocked by admin, contact admin for more details'})
             }
@@ -161,7 +161,6 @@ const userLogin = async(req,res)=>{
 }
 
 //user logout
-
 const userLogOut = async(req,res)=>{
     try {
         req.session.destroy();
@@ -172,7 +171,6 @@ const userLogOut = async(req,res)=>{
 } 
 
 //load home
-
 const loadHome = async (req,res)=>{
     try {
         const categories = await Category.find({isListed: true});
@@ -190,7 +188,6 @@ const loadHome = async (req,res)=>{
 }
 
 //load product page
-
 const loadProduct =  async (req,res)=>{
     try {
         const id = req.params.id;
@@ -202,7 +199,6 @@ const loadProduct =  async (req,res)=>{
 }
 
 //load category specific products
-
 const loadCategory =async (req,res)=>{
     try {
         const id = req.params.id;
@@ -216,7 +212,6 @@ const loadCategory =async (req,res)=>{
 }
 
 //load user account page
-
 const loadaccount = async (req,res)=>{
     try {
         const user = await User.findById(req.session.user_id);
@@ -230,7 +225,6 @@ const loadaccount = async (req,res)=>{
 }
 
 // load edit address
-
 const loadEditAddress = async (req,res)=>{
     try {
         res.render('editAddress')
@@ -240,7 +234,6 @@ const loadEditAddress = async (req,res)=>{
 }
 
 // load add address
-
 const loadAddAddress = async (req,res)=>{
     try {
         res.render('addAddress')
@@ -250,7 +243,6 @@ const loadAddAddress = async (req,res)=>{
 }
 
 //add address
-
 const addAddress =  async (req,res)=>{
     try {
         const address = req.body;
@@ -268,6 +260,20 @@ const addAddress =  async (req,res)=>{
         console.log(error.message);
     }
 }
+
+//load about
+
+const loadAbout = async (req,res)=>{
+    try {
+        res.render('about')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+
+
 module.exports = {
     loadRegister,
     addUser,
@@ -281,6 +287,7 @@ module.exports = {
     loadaccount,
     loadEditAddress,
     loadAddAddress,
-    addAddress
+    addAddress,
+    loadAbout
     
 };
