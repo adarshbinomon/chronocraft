@@ -47,6 +47,7 @@ user_route.get('/checkout',auth.isLogIn, cartController.loadCheckout)
 user_route.post('/checkout', cartController.checkout)
 
 user_route.get('/order-details/:id',auth.isLogIn,orderController.loadOrderDetails)
+user_route.get('/order-cancel/:id',orderController.cancelOrder)
 
 
 

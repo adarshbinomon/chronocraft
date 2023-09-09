@@ -10,7 +10,11 @@ const Order = require('../../model/orderModel');
 const loadOrderDetails = async (req,res)=>{
     try {
         const orderId = req.params.id;
-        const order= await Order.findById(orderId);
+        // const order= await Order.findById(orderId);
+        const order = await Order.findOne({_id: orderId}).populate('products.productId')
+        console.log('details of 0th product');
+        console.log(order.products[0].productId);
+
 
         res.render('orderDetails',{order: order})
 
@@ -19,7 +23,24 @@ const loadOrderDetails = async (req,res)=>{
     }
 }
 
+// cancel order
+
+const cancelOrder = async (req,res)=>{
+    try {
+        const id = req.params.id;
+        const update = {
+            orderStatus : 'CANCELLED'
+        }
+        const order = await Order.findByIdAndUpdate(id,update);
+
+        res.redirect('/account')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 module.exports= {
-    loadOrderDetails
+    loadOrderDetails,
+    cancelOrder
 }

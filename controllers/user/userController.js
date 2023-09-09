@@ -150,7 +150,7 @@ const userLogin = async(req,res)=>{
                 req.session.user = userData;
                 console.log(userData);
                 console.log(userData.isActive);
-                res.redirect('');
+                res.redirect('/');
             }else{
                 res.render('login',{message: 'Access to your account is currently  blocked by admin, contact admin for more details'})
             }
