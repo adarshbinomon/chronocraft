@@ -44,8 +44,8 @@ user_route.post('/add-to-cart',auth.isLogIn, cartController.addToCart)
 user_route.post('/change-quantity', cartController.changeQuantity)
 user_route.get('/remove-cart/:id', cartController.deleteCartItem)
 user_route.get('/checkout',auth.isLogIn, cartController.loadCheckout)
-user_route.post('/checkout', cartController.checkout)
 
+user_route.post('/checkout', orderController.checkout)
 user_route.get('/order-details/:id',auth.isLogIn,orderController.loadOrderDetails)
 user_route.get('/order-cancel/:id',orderController.cancelOrder)
 

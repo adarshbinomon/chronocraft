@@ -137,44 +137,12 @@ const deleteCartItem = async (req, res) => {
    }
   }
 
-  //checkout
-
-  const checkout = async (req, res) => {
-    try {
-      console.log(req.body);
-      const userId = req.session.user_id;
-      const user = await User.findById(userId);
-      const cart = await User.findById(req.session.user_id,{cart:1,_id:0})
-      console.log(cart.cart);
-      const order = new Order({
-        customerId: userId,
-        quantity: req.body.quantity,
-        price: req.body.salePrice,
-        products: cart.cart,
-        totalAmount: req.body.total,
-        shippingAddress: req.body.address,
-      });
-      const orderSuccess = await order.save();
-      if(orderSuccess) {
-        for (const cartItem of user.cart) {
-          const product = await Product.findById(cartItem.productId);
-  
-          if (product) {
-            product.quantity -= cartItem.quantity;
-            await product.save();
-          }
-        }        res.render('successPage')
-      }
-      console.log(req.body);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+ 
 module.exports = {
     loadCart,
     addToCart,
     changeQuantity,
     deleteCartItem,
     loadCheckout,
-    checkout
+
 }

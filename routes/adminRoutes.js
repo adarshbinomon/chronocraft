@@ -58,6 +58,7 @@ const adminController = require("../controllers/admin/adminController");
 const categoryController =  require('../controllers/admin/categoryController')
 const productController =  require('../controllers/admin/productController')
 const userManagementController =  require('../controllers/admin/userManagementController')
+const orderManagementController =  require('../controllers/admin/orderManagementController')
 const { isLogIn } = require("../middleware/userAuth");
 
 //routes
@@ -85,5 +86,7 @@ admin_route.get('/users',auth.isLogIn, userManagementController.loadUsers)
 admin_route.get('/edit-user/:id',auth.isLogIn, userManagementController.loadEditUser)
 admin_route.post('/edit-user/:id', userManagementController.editUser)
 admin_route.get('/block-user/:id', userManagementController.blockOrUnblockUser)
+
+admin_route.get('/orders',orderManagementController.loadOrders)
 
 module.exports = admin_route;

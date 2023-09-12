@@ -12,10 +12,13 @@ const isLogIn = async(req,res,next)=>{
             }else{
             req.session.user_id = null;
             res.redirect('/login')
-            }
-        }else{
-            res.redirect('/login')
         }
+        
+        }else{
+            if(!req.originalUrl.includes('add-to-cart') && !req.originalUrl.includes('add-to-wishlist'))
+                req.session.returnTo = req.originalUrl;
+            res.redirect('/login');
+        }   
     } catch (error) {
         console.log(error.message);
     }

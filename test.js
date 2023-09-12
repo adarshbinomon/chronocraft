@@ -147,3 +147,8 @@ function changeQuantity(productId,count,Subtotal,price){
     alert(price)
     // userCart.cart[i].productId.salePrice * userCart.cart[i].quantity
     document.getElementById("subTotal").innerHTML= Subtotal+(price*count); 
+
+
+    <td><span class="badge rounded-pill alert-success">Received</span></td>
+    <td><span class="badge rounded-pill alert-danger">Canceled</span></td>
+    <td><span class="badge rounded-pill alert-warning">Pending</span></td>
