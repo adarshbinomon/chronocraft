@@ -16,6 +16,8 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="/assets/css/main.css?v=3.4">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 </head>
 
 <body>
@@ -810,7 +812,11 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    <% if(userCart.cart.length) { %>
                                     <a href="/checkout" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
+                                    <%} else{ %> 
+                                    <a type="button" onclick="cartEmpty()" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To CheckOut</a>
+                                    <% } %>
                                 </div>
                             </div>
                         </div>
@@ -946,6 +952,14 @@
         </div>
     </div>
 <!-- scripts -->
+<script>
+    function cartEmpty() {
+        Swal.fire(
+        'Oops!, Cart is Empty',
+        'Add items to your cart before checking out!'
+        )
+    }
+</script>
     
     <script>
     function changeQuantity(productId,count,price,subTotal,cartSubTotal,total,quantity){

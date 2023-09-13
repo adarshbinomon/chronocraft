@@ -3,6 +3,7 @@ const Product = require('../../model/productModel');
 const Category = require('../../model/categoryModel');
 const Order = require('../../model/orderModel');
 const Razorpay = require("razorpay");
+const mongoose = require('mongoose')
 
 // const razorpay = new Razorpay({
 //     key_id: 'process.env.key_id',
@@ -53,8 +54,14 @@ const loadOrderDetails = async (req,res)=>{
       shippingAddress: req.body.address,
       paymentDetails: req.body.payment_option,
     });
-
     const orderSuccess = await order.save();
+    console.log('order==',order);
+    console.log('ordeRRRRRR');
+    console.log(order._id);
+    const orderId = order._id;
+    console.log(orderSuccess);
+    console.log(orderId);
+
     
     if (orderSuccess) {
       for (const cartItem of user.cart) {
@@ -78,13 +85,14 @@ const loadOrderDetails = async (req,res)=>{
         const options = {
           amount: amount,
           currency: "INR",
-          receipt: order._id,
+          receipt: orderId,
         };
 
         // Create a Razorpay order
         razorpay.orders.create(options,(err, order) => {
           if (!err) {
             console.log("Razorpay order created");
+            console.log(orderId);
 
             // Send Razorpay response to the client
             res.status(200).send({
@@ -92,6 +100,7 @@ const loadOrderDetails = async (req,res)=>{
               msg: "Order created",
               order_id: order.id,
               amount: amount,
+              reciept: orderId,
               key_id: 'rzp_test_7ETyzh4jBTZxal',
               contact: "9876543210",
               name: "admin",
@@ -110,6 +119,38 @@ const loadOrderDetails = async (req,res)=>{
   }
 };
 
+//veerify payment
+
+const verifyPayment = async(req, res) => {
+  try {
+    console.log('this is id:',req.body.orderId);
+    console.log('this is id1:',req.body);
+    console.log('this is id2:',req.body.payment);
+    const kk = await Order.find({_id : new mongoose.Types.ObjectId(req.body.orderId)}).lean()
+    if(kk)
+      console.log(kk);
+      console.log(req.body.orderId);
+      const crypto = require('crypto')
+    let hmac = crypto.createHmac('sha256', 'rzp_test_7ETyzh4jBTZxal');
+    hmac.update(req.body.payment.razorpay_order_id + "|" + req.body.payment.razorpay_payment_id);
+    hmac = hmac.digest('hex');
+
+
+    if (hmac == req.body.payment.razorpay_signature) {
+      console.log('call comes here');
+      console.log(typeof(req.body.orderId));
+      await Order.updateOne({_id : new mongoose.Types.ObjectId(req.body.orderId)},{$set : { paymentStatus : 'RECEIVED', orderStatus :"PLACED"}}).lean()
+
+      res.status(200).json({ status: 'success', msg: 'Payment verified' });
+    } else {
+
+      res.status(400).json({ status: 'error', msg: 'Payment verification failed' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ status: 'error', msg: 'Internal server error' });
+  }
+};
 
 
 
@@ -133,5 +174,6 @@ const cancelOrder = async (req,res)=>{
 module.exports= {
     loadOrderDetails,
     checkout,
-    cancelOrder
+    cancelOrder,
+    verifyPayment
 }

@@ -552,7 +552,7 @@
                                                     <div class="card-body">
                                                         <address><%=user.address[i].name%><br> <%=user.address[i].billing_address%>, <%=user.address[i].billing_address2%>, <%=user.address[i].city%><br><%=user.address[i].state%><br><%=user.address[i].zipcode%><br><%=user.address[i].phone%><br><%=user.address[i].email%></address>
                                                         <p><%=user.address[i].order_notes%></p>
-                                                        <a href="#" class="btn-small">Edit</a>
+                                                        <a href="/edit-address/<%= i %>" class="btn-small">Edit</a>
                                                     </div>
                                                 </div>
                                             </div>

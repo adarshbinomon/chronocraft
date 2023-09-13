@@ -231,10 +231,28 @@ const loadaccount = async (req,res)=>{
 // load edit address
 const loadEditAddress = async (req,res)=>{
     try {
-        res.render('editAddress')
+        const addressIndex = req.params.id;
+        const user = await User.findById(req.session.user_id)
+        const address = user.address[addressIndex]
+        console.log('edit address details');
+        console.log(address);
+        res.render('editAddress',{address: address, addressIndex: addressIndex})
     } catch (error) {
         console.log(error.message);
     }
+}
+
+// edit address
+
+const editAddress = async (req,res)=>{
+    try {
+        console.log(req.body);
+        const user = await User.findById(req.session.user_id);
+        user.address[req.body.addressIndex].name = req.body.name
+    } catch (error) {
+        console.log(error.message);
+    }
+
 }
 
 // load add address
@@ -249,11 +267,23 @@ const loadAddAddress = async (req,res)=>{
 //add address
 const addAddress =  async (req,res)=>{
     try {
-        const address = req.body;
-        console.log('ADDADDRESS- address:');
+        const address = {
+            name : req.body.name,
+            addressLine1 : req.body.addressLine1,
+            addressLine2 : req.body.addressLine2,
+            city : req.body.city,
+            state : req.body.state,
+            pinCode : req.body.pinCode,
+            phone : req.body.phone,
+            email : req.body.email,
+            addressType : req.body.addressType
+
+
+        }
+        // console.log('ADDADDRESS- address:');
         console.log(address);
         const user = await User.findById(req.session.user_id);
-        console.log('ADDADDRESS- user:'+user);
+        // console.log('ADDADDRESS- user:'+user);
 
         user.address.push(address);
         await user.save();
@@ -290,6 +320,7 @@ module.exports = {
     loadCategory,
     loadaccount,
     loadEditAddress,
+    editAddress,
     loadAddAddress,
     addAddress,
     loadAbout
