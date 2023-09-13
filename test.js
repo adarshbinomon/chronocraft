@@ -152,3 +152,74 @@ function changeQuantity(productId,count,Subtotal,price){
     <td><span class="badge rounded-pill alert-success">Received</span></td>
     <td><span class="badge rounded-pill alert-danger">Canceled</span></td>
     <td><span class="badge rounded-pill alert-warning">Pending</span></td>
+
+
+    const postOrder = async (req, res) => {
+      try {
+        const userId = req.session.user_id;
+        const userData = await User.findById(userId, { cart: 1, _id: 0 });
+    
+        const order = new Order({
+          customerId: userId,
+          products: userData.cart,
+          quantity: req.body.quantity,
+          price: req.body.salePrice,
+          totalAmount: req.body.GrandTotal,
+          paymentMethod: req.body.paymentMethod,
+          shippingAddress: JSON.parse(req.body.address),
+        });
+        const orderSuccess = await order.save();
+        if (orderSuccess) {
+          for (const cartItem of userData.cart) {
+            const product = await Product.findById(cartItem.productId);
+    
+            if (product) {
+              product.stock -= cartItem.quantity;
+              await product.save();
+            }
+          }
+          await User.updateOne({ _id: userId }, { $unset: { cart: 1 } });
+    
+          if (req.body.paymentMethod === "COD") {
+            console.log("razzzz2");
+    
+            res.redirect("/order-success");
+            // console.log(req.body);
+          } else if (req.body.paymentMethod === "razorpay") {
+            console.log(req.body);
+    
+            const amount = req.body.GrandTotal * 100;
+            const options = {
+              amount: amount,
+              currency: "INR",
+              receipt: req.body.email,
+            };
+    
+            razorpay.orders.create(options, (err, order) => {
+              console.log(err, "oo");
+              if (!err) {
+                console.log("hai baby");
+                res.status(200).send({
+                  success: true,
+                  msg: "Order created",
+                  order_id: order.id,
+                  amount: amount,
+                  key_id: RAZORPAY_ID_KEY,
+                  // productId : req.body.products.productId,
+                  contact: "9998887776",
+                  name: "admin",
+                  email: "admin@gmail.com",
+                });
+              } else {
+                console.log("jhkgsfdkjh");
+                res
+                  .status(400)
+                  .send({ success: false, msg: "Something went wrong!" });
+              }
+            });
+          }
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
