@@ -248,10 +248,41 @@ const editAddress = async (req,res)=>{
     try {
         console.log(req.body);
         const user = await User.findById(req.session.user_id);
-        user.address[req.body.addressIndex].name = req.body.name
-    } catch (error) {
+        const addressId = req.body.addressId;
+        console.log(addressId);
+      
+        // Use findOneAndUpdate to update the specific address
+        const updatedUser = await User.findOneAndUpdate(
+          {
+            _id: user._id,
+            'address._id': addressId
+          },
+          {
+            $set: {
+              'address.$.name': req.body.name,
+              'address.$.name': req.body.name,
+              'address.$.name': req.body.name,
+              'address.$.name': req.body.name,
+              'address.$.name': req.body.name,
+              'address.$.name': req.body.name,
+              'address.$.name': req.body.name,
+              'address.$.name': req.body.name,
+              'address.$.name': req.body.name,
+              // Add other fields you want to update here
+            }
+          },
+          { new: true } // To return the updated user document
+        );
+      
+        if (updatedUser) {
+          console.log('User address updated:', updatedUser);
+        } else {
+          console.log('Address not found or user not found.');
+        }
+      } catch (error) {
         console.log(error.message);
-    }
+      }
+      
 
 }
 
