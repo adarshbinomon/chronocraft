@@ -547,11 +547,11 @@
                                             <div class="col-lg-6">
                                                 <div class="card mb-3 mb-lg-0">
                                                     <div class="card-header">
-                                                        <h5 class="mb-0">Address <%= i+1 %></h5>
+                                                        <h5 class="mb-0"><%= user.address[i].addressType %></h5>
                                                     </div>
                                                     <div class="card-body">
-                                                        <address><%=user.address[i].name%><br> <%=user.address[i].billing_address%>, <%=user.address[i].billing_address2%>, <%=user.address[i].city%><br><%=user.address[i].state%><br><%=user.address[i].zipcode%><br><%=user.address[i].phone%><br><%=user.address[i].email%></address>
-                                                        <p><%=user.address[i].order_notes%></p>
+                                                        <address><%=user.address[i].name%><br> <%=user.address[i].addressLine1%>, <%=user.address[i].addressLine2%>, <%=user.address[i].city%><br><%=user.address[i].state%><br><%=user.address[i].pinCode%><br><%=user.address[i].phone%><br><%=user.address[i].email%></address>
+
                                                         <a href="/edit-address/<%= i %>" class="btn-small">Edit</a>
                                                     </div>
                                                 </div>

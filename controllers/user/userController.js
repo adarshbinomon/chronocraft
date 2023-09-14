@@ -260,15 +260,14 @@ const editAddress = async (req,res)=>{
           {
             $set: {
               'address.$.name': req.body.name,
-              'address.$.name': req.body.name,
-              'address.$.name': req.body.name,
-              'address.$.name': req.body.name,
-              'address.$.name': req.body.name,
-              'address.$.name': req.body.name,
-              'address.$.name': req.body.name,
-              'address.$.name': req.body.name,
-              'address.$.name': req.body.name,
-              // Add other fields you want to update here
+              'address.$.addressLine1': req.body.addressLine1,
+              'address.$.addressLine2': req.body.addressLine2,
+              'address.$.city': req.body.city,
+              'address.$.state': req.body.state,
+              'address.$.pinCode': req.body.pinCode,
+              'address.$.phone': req.body.phone,
+              'address.$.email': req.body.email,
+              'address.$.addressType': req.body.addressType
             }
           },
           { new: true } // To return the updated user document
@@ -276,9 +275,12 @@ const editAddress = async (req,res)=>{
       
         if (updatedUser) {
           console.log('User address updated:', updatedUser);
+          res.redirect('/account')
         } else {
           console.log('Address not found or user not found.');
+          
         }
+
       } catch (error) {
         console.log(error.message);
       }
