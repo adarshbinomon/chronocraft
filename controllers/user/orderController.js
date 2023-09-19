@@ -22,13 +22,17 @@ const razorpay = new Razorpay({
 const loadOrderDetails = async (req,res)=>{
     try {
         const orderId = req.params.id;
+        const userData = req.session.user;
         // const order= await Order.findById(orderId);
         const order = await Order.findOne({_id: orderId}).populate('products.productId')
         console.log('details of 0th product');
         console.log(order.products[0].productId);
 
 
-        res.render('orderDetails',{order: order})
+        res.render('orderDetails',{
+          order: order,
+          userData: userData
+        })
 
     } catch (error) {
         console.log(error.message);
@@ -74,11 +78,14 @@ const loadOrderDetails = async (req,res)=>{
       }
 
       // Make the cart empty
-      // await User.updateOne({ _id: userId }, { $unset: { cart: 1 } });
+      await User.updateOne({ _id: userId }, { $unset: { cart: 1 } });
 
       if (order.paymentDetails === 'COD') {
-        res.render('successPage');
-      } else if (req.body.payment_option === "razorpay") {
+        res.status(200).json({
+          status: true,
+          msg: "Order created for COD",
+        })
+            } else if (req.body.payment_option === "razorpay") {
         console.log('razorpay');
 
         const amount = req.body.total * 100; // Amount in paise
@@ -119,7 +126,7 @@ const loadOrderDetails = async (req,res)=>{
   }
 };
 
-//veerify payment
+//verify payment
 
 const verifyPayment = async(req, res) => {
   try {
@@ -170,10 +177,21 @@ const cancelOrder = async (req,res)=>{
     }
 }
 
+//order success
+
+const orderSuccess = async (req,res)=>{
+  try {
+    res.render('successPage')
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 
 module.exports= {
     loadOrderDetails,
     checkout,
     cancelOrder,
-    verifyPayment
+    verifyPayment,
+    orderSuccess
 }

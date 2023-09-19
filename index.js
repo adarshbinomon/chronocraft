@@ -11,8 +11,7 @@ const app = express();
 
 app.use(nocache());
 
-//set view engine
-// app.set("view engine","ejs")
+
 
 //routes
 const userRoute = require('./routes/userRoutes')

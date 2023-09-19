@@ -66,7 +66,10 @@ const sendMail = async (name, email) => {
 //load signup
 const loadRegister = async (req, res) => {
     try {
-        res.render('signup');
+        const userData = req.session.user;
+        res.render('signup',{
+            userData: userData
+        });
     } catch (error) {
         console.log(error.message);
         res.status(500).send('Internal Server Error');
@@ -127,7 +130,10 @@ const verifyOtp = async (req, res) => {
 
 const loadLogin = async (req,res)=>{
     try {
-        res.render('login')
+        const userData = req.session.user;
+        res.render('login',{
+            userData: userData
+        })
     } catch (error) {
         console.log(error.message);
         res.status(500).send('Internal Server Error');
@@ -195,8 +201,11 @@ const loadHome = async (req,res)=>{
 const loadProduct =  async (req,res)=>{
     try {
         const id = req.params.id;
+        const userData = req.session.user;
         const product = await Product.findById(id);
-        res.render('productDetails',{product: product})
+        res.render('productDetails',{
+            product: product,
+            userData: userData})
     } catch (error) {
         console.log(error.message);
     }
@@ -205,11 +214,15 @@ const loadProduct =  async (req,res)=>{
 //load category specific products
 const loadCategory =async (req,res)=>{
     try {
+        const userData = req.session.user;
         const id = req.params.id;
         const category = await Category.findById(id);
         const products = await Product.find({category: category.name})
         console.log(products);
-        res.render('categoryFind',{products : products})
+        res.render('categoryFind',{
+            products : products,
+            userData : userData
+        })
     } catch (error) {
         console.log(error.message);
     }
@@ -218,11 +231,14 @@ const loadCategory =async (req,res)=>{
 //load user account page
 const loadaccount = async (req,res)=>{
     try {
-        const user = await User.findById(req.session.user_id);
+        const user = req.session.user;
         const orders = await Order.find({ customerId: req.session.user_id });
         console.log('user>-----'+user);
         console.log('user.address.length>-----'+user.address.length);
-        res.render('userAccount',{user:user,orders: orders})
+        res.render('userAccount',{user:user,
+            orders: orders,
+            userData: user
+        })
     } catch (error) {
         console.log(error.message);
     }
@@ -232,11 +248,16 @@ const loadaccount = async (req,res)=>{
 const loadEditAddress = async (req,res)=>{
     try {
         const addressIndex = req.params.id;
-        const user = await User.findById(req.session.user_id)
+        const userData = req.session.user;
+        const user = req.session.user;
         const address = user.address[addressIndex]
         console.log('edit address details');
         console.log(address);
-        res.render('editAddress',{address: address, addressIndex: addressIndex})
+        res.render('editAddress',{
+            address: address,
+            addressIndex: addressIndex,
+            userData: userData
+        })
     } catch (error) {
         console.log(error.message);
     }
@@ -291,7 +312,8 @@ const editAddress = async (req,res)=>{
 // load add address
 const loadAddAddress = async (req,res)=>{
     try {
-        res.render('addAddress')
+        const userData = req.session.user
+        res.render('addAddress',{userData: userData})
     } catch (error) {
         console.log(error.message);
     }
@@ -332,7 +354,8 @@ const addAddress =  async (req,res)=>{
 
 const loadAbout = async (req,res)=>{
     try {
-        res.render('about')
+        const userData = req.session.user
+        res.render('about',{userData: userData})
     } catch (error) {
         console.log(error.message);
     }

@@ -5,7 +5,11 @@ const moment = require('moment-timezone');
 const orderSchema = new mongoose.Schema({
     
     orderId: String,
-    customerId: mongoose.Schema.Types.ObjectId,
+    customerId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+
+    },
     products: [{
         productId: {
             type : mongoose.Schema.Types.ObjectId,

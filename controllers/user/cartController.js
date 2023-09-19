@@ -7,6 +7,7 @@ const Order = require('../../model/orderModel');
 
 const loadCart = async (req,res)=>{
     try {
+        const userData = req.session.user
         const userCart = await User.findOne({_id: req.session.user_id}).populate('cart.productId')
         // console.log(JSON.stringify(userCart));
         let grandTotal=0;
@@ -15,7 +16,11 @@ const loadCart = async (req,res)=>{
         }
         console.log('grandTotal'+grandTotal);
         // console.log(cartItems);
-        res.render('cart',{userCart: userCart,grandTotal: grandTotal})
+        res.render('cart',{
+          userCart: userCart,
+          grandTotal: grandTotal,
+          userData: userData
+        })
     } catch (error) {
         console.log(error.message);
     }
@@ -123,14 +128,19 @@ const deleteCartItem = async (req, res) => {
 
   const loadCheckout = async (req,res)=>{
    try {
-    const user = await User.findById(req.session.user_id)
+    const user = req.session.user;
+    const userData = req.session.user;
     const userCart = await User.findOne({_id: req.session.user_id}).populate('cart.productId')
 
 
     console.log(user);
     console.log(userCart.address[0]);
 
-    res.render('checkout',{user: user,userCart: userCart})
+    res.render('checkout',{
+      user: user,
+      userCart: userCart,
+      userData: userData
+    })
    
   } catch (error) {
     console.log(error.message);  
