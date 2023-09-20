@@ -15,6 +15,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link rel="stylesheet" href="/assets/css/main.css?v=3.4">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 </head>
 
 <body>
@@ -255,7 +258,7 @@
                                                         <tbody>
                                                             <% for(let i=0;i<orders.length;i++) {  %>
                                                             <tr>
-                                                                <td><%=i+1%></td>
+                                                                <td><%=String(orders[i]._id).slice(-6)%></td>
                                                                 <td><%= String(orders[i].createdAt).slice(4, 16) %></td>
                                                                 <td><%=orders[i].orderStatus%></td>
                                                                 <td>₹ <%=orders[i].totalAmount%> </td>
@@ -318,42 +321,25 @@
                                     <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h5>Account Details</h5>
+                                                <h5>Change password</h5>
                                             </div>
                                             <div class="card-body">
-                                                <p>Already have an account? <a href="page-login-register.html">Log in instead!</a></p>
                                                 <form method="post" name="enq">
                                                     <div class="row">
-                                                        <div class="form-group col-md-6">
-                                                            <label>First Name <span class="required">*</span></label>
-                                                            <input required="" class="form-control square" name="name" type="text">
-                                                        </div>
-                                                        <div class="form-group col-md-6">
-                                                            <label>Last Name <span class="required">*</span></label>
-                                                            <input required="" class="form-control square" name="phone">
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>Display Name <span class="required">*</span></label>
-                                                            <input required="" class="form-control square" name="dname" type="text">
-                                                        </div>
-                                                        <div class="form-group col-md-12">
-                                                            <label>Email Address <span class="required">*</span></label>
-                                                            <input required="" class="form-control square" name="email" type="email">
-                                                        </div>
                                                         <div class="form-group col-md-12">
                                                             <label>Current Password <span class="required">*</span></label>
-                                                            <input required="" class="form-control square" name="password" type="password">
+                                                            <input required="" class="form-control square" name="currentPassword" id="currentPassword" type="password">
                                                         </div>
                                                         <div class="form-group col-md-12">
                                                             <label>New Password <span class="required">*</span></label>
-                                                            <input required="" class="form-control square" name="npassword" type="password">
+                                                            <input required="" class="form-control square" name="newPassword" id="newPassword" type="password">
                                                         </div>
                                                         <div class="form-group col-md-12">
                                                             <label>Confirm Password <span class="required">*</span></label>
-                                                            <input required="" class="form-control square" name="cpassword" type="password">
+                                                            <input required="" class="form-control square" name="confirmPassword" id="confirmPassword" type="password">
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit">Save</button>
+                                                            <button type="submit" onclick="validatePassword(event)" class="btn btn-fill-out submit" name="submit" value="Submit">Save</button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -389,6 +375,62 @@
             </div>
         </div>
     </div>
+
+    <!-- script for password change -->
+    <script>
+        function validatePassword(event) {
+            event.preventDefault()
+            const newPassword = document.getElementById('newPassword').value
+            const confirmPassword = document.getElementById('confirmPassword').value
+
+            if (newPassword !== confirmPassword) {
+                Swal.fire(
+                    "The new Passwords doesn't match",
+                    "The passwords must match",
+                    'error'
+                )
+            } else {
+             alert('else')
+                changePassword();  
+              
+            }
+        }
+
+        function changePassword(){
+            alert('change')
+            const oldPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+
+            $.ajax({
+                url: '/reset-password',
+                method: 'post',
+                data:{
+                    oldPassword,
+                    newPassword
+                },
+                success: function(){
+                    if(res.success){
+                        Swal.fire({
+                        // position: 'top-end',
+                        icon: 'success',
+                        title: 'Your password has been changed',
+                        showConfirmButton: true,
+                        }).then(function(){
+                            window.location.href= 'http://localhost:3000/account'
+                        })
+                    }else{
+                        Swal.fire(
+                        "The new Passwords doesn't match",
+                        "The passwords must match",
+                        'error'
+                        )
+                    }
+                }
+            })
+        }
+    </script>
+    <!-- script for password change -->
+
     <!-- Vendor JS-->
     <script src="/assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="/assets/js/vendor/jquery-3.6.0.min.js"></script>

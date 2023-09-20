@@ -45,7 +45,7 @@ const loadOrderDetails = async (req,res)=>{
   try {
     console.log(req.body);
     const userId = req.session.user_id;
-    const user = await User.findById(userId);
+    const user = req.session.user;
     const cart = await User.findById(req.session.user_id, { cart: 1, _id: 0 });
     console.log(cart.cart);
     console.log(req.body);
@@ -60,7 +60,7 @@ const loadOrderDetails = async (req,res)=>{
     });
     const orderSuccess = await order.save();
     console.log('order==',order);
-    console.log('ordeRRRRRR');
+    console.log('order');
     console.log(order._id);
     const orderId = order._id;
     console.log(orderSuccess);

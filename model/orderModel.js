@@ -4,7 +4,6 @@ const moment = require('moment-timezone');
 
 const orderSchema = new mongoose.Schema({
     
-    orderId: String,
     customerId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
@@ -56,6 +55,9 @@ const orderSchema = new mongoose.Schema({
     updatedAt:{
         type: Date,
         default: () => moment.tz(Date.now(), "Asia/Kolkata")
+    },
+    deliveredOn:{
+        type: Date
     }
 });
 

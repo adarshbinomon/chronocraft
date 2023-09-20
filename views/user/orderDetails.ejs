@@ -205,7 +205,6 @@
                                         <th scope="col">Price</th>
                                         <th scope="col">Quantity</th>
                                         <th scope="col">Subtotal</th>
-                                        <th scope="col">Remove</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -229,7 +228,6 @@
                                             <span>₹<%= order.products[i].quantity * order.products[i].productId.salePrice %></span>
                                             <%sum = sum + order.products[i].quantity * order.products[i].productId.salePrice %>
                                         </td>
-                                        <td class="action" data-title="Remove"><a href="#" class="text-muted"><i class="fi-rs-trash"></i></a></td>
                                     </tr>
                                     <%}%>
                                     
@@ -237,7 +235,7 @@
                             </table>
                         </div>
                         <div class="cart-action text-end">
-                            <a class="btn "><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
+                            <a href="/" class="btn "><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
                         </div>
                         <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
                         <div class="row mb-50">
@@ -265,7 +263,39 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <a href="/order-cancel/<%=order._id%>" class="btn "></i>Cancel Order</a>
+                                    <%if(order.orderStatus !== "CANCELLED") {%>
+                                        <a class="btn btn-primary m-5" data-bs-toggle="modal" data-bs-target="#reasonModal" data-bs-title="Cancel" data-bs-route="/order-cancel/<%=order._id%>" data-bs-orderid="<%= order?._id %>">CANCEL ORDER</a>
+                                        <!-- <a href="/order-cancel/<%=order._id%>" class="btn "></i>Cancel Order</a> -->
+                                    <% } %>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <div class="border p-md-4 p-30 border-radius cart-totals">
+                                    <div class="heading_s1 mb-3">
+                                        <h4>Order Details</h4>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="cart_total_label">Order Status</td>
+                                                    <td class="cart_total_amount"><span class=""><%=order.orderStatus%></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cart_total_label">Payment Type</td>
+                                                    <td class="cart_total_amount"><strong><span class=""><%=order.paymentDetails%></span></strong></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cart_total_label">Payment Status</td>
+                                                    <td class="cart_total_amount"> <i class="ti-gift mr-5"></i><%=order.paymentStatus%></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cart_total_label">Order Date</td>
+                                                    <td class="cart_total_amount"> <i class="ti-gift mr-5"></i><%=String(order.createdAt).slice(0,16)%></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -273,7 +303,39 @@
                 </div>
             </div>
         </section>
-    </main>
+        
+        <!-- CANCEL MODAL -->
+        
+        <div class="modal fade" id="reasonModal" tabindex="-1" aria-labelledby="reasonModalLabel" aria-hidden="true">
+            <div class="modal-dialog  modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reasonModalLabel">New message</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-center reason-prompt">Are you sure you want to cancel this order? <br>Please do mention the reason for cancelling the order.</p>
+                        <form id="reasonForm" action="/order-cancel/<%=order._id%>" method="post">
+                            <div class="mb-3">
+                                <input type="hidden" class="form-control" id="orderId" name="orderId">
+                            </div>
+                            <div class="mb-3">
+                                <label for="reason" class="col-form-label">Reason :</label>
+                                <textarea class="form-control" id="reason" name="reason" placeholder="Please enter a reason..." required></textarea>
+                            </div>
+                        </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="submit" form="reasonForm" class="btn btn-primary">Submit & Confirm</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CANCEL MODAL -->
+    
+    </div>
+</main>
      <!-- footer -->
     <%- include('partials/footer')%>
     <!-- footer -->
@@ -293,6 +355,8 @@
             </div>
         </div>
     </div>
+
+
     <!-- Vendor JS-->
     <script src="/assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="/assets/js/vendor/jquery-3.6.0.min.js"></script>

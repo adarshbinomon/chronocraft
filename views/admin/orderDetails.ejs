@@ -202,23 +202,23 @@
                     <div class="row align-items-center">
                         <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
                             <span>
-                                <i class="material-icons md-calendar_today"></i> <b>Wed, Aug 13, 2022, 4:34PM</b>
+                                <i class="material-icons md-calendar_today"></i> <b><%=String(order.createdAt).slice(0,16)%></b>
                             </span> <br>
-                            <small class="text-muted">Order ID: 3453012</small>
+                            <small class="text-muted">Order ID: <%=String(order._id).slice(-6)%></small>
                         </div>
                         <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-                            <form action="/admin/change-order-status" method="post">
+                            <form action="/admin/change-status/<%=order._id%>" method="post">
+                                <span>Order Status: </span>
                                 <select aria-placeholder="Order Status" class="form-select d-inline-block mb-lg-0 mb-15 mw-200" name="status">
-                                  <option value="PENDING">PENDING</option>
-                                    <option value="PLACED">PLACED</option>
-                                    <option value="CANCELLED">CANCELLED</option>
-                                    <option value="DELIVERED">DELIVERED</option>
+                                  <option <%if(order.orderStatus=== "PENDING") { %> selected <% } %> value="PENDING">PENDING</option>
+                                    <option <%if(order.orderStatus=== "PLACED") { %> selected <% } %> value="PLACED">PLACED</option>
+                                    <option <%if(order.orderStatus=== "CANCELLED") { %> selected <% } %> value="CANCELLED">CANCELLED</option>
+                                    <option <%if(order.orderStatus=== "DELIVERED") { %> selected <% } %> value="DELIVERED">DELIVERED</option>
                                 </select>
-                                <input type="hidden" name="id" id="" value="<%=order._id%>">
+                                <input type="hidden" name="id"  value="<%=order._id%>">
                                 <button type="submit" class="btn btn-primary">Save</button>
                                 <!-- <a class="btn btn-primary" href="#">Save</a> -->
                             </form>
-                            <a class="btn btn-primary" href="#">Save</a>
                             <a class="btn btn-secondary print ms-2" href="#"><i class="icon material-icons md-print"></i></a>
                         </div>
                     </div>
@@ -235,7 +235,6 @@
                                     <p class="mb-1">
                                         <%=order.customerId.name%> <br> <%=order.customerId.email%> <br> <%=order.customerId.phoneNumber%>
                                     </p>
-                                    <a href="#">View profile</a>
                                 </div>
                             </article>
                         </div> <!-- col// -->
@@ -249,24 +248,23 @@
                                     <p class="mb-1">
                                         <%=order.customerId.address[0].addressLine1%> <br> <%=order.customerId.address[0].addressLine2%><br> Status: new
                                     </p>
-                                    <a href="#">Download info</a>
                                 </div>
                             </article>
-                        </div> <!-- col// -->
-                        <!-- <div class="col-md-4">
+                        </div> 
+                        <!-- col// -->
+                        <div class="col-md-4">
                             <article class="icontext align-items-start">
                                 <span class="icon icon-sm rounded-circle bg-primary-light">
-                                    <i class="text-primary material-icons md-place"></i>
+                                    <i class="text-primary material-icons md-money"></i>
                                 </span>
                                 <div class="text">
-                                    <h6 class="mb-1">Deliver to</h6>
+                                    <h6 class="mb-1">Payment Details</h6>
                                     <p class="mb-1">
-                                        City: Tashkent, Uzbekistan <br>Block A, House 123, Floor 2 <br> Po Box 10000
+                                        Payment Type: <%=order.paymentDetails%> <br> Payment Status: <%=order.paymentStatus%>
                                     </p>
-                                    <a href="#">View profile</a>
                                 </div>
                             </article>
-                        </div> col// -->
+                        </div> 
                     </div> <!-- row // -->
                     <!-- <div class="row"> -->
                         <div class="">
@@ -281,6 +279,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <%var sum=0%>
                                         <%for(let i=0;i<product.products.length;i++) {%>
                                         <tr>
                                             <td>
@@ -294,14 +293,45 @@
                                             <td> <%=product.products[i].productId.salePrice%> </td>
                                             <td> <%=product.products[i].quantity%> </td>
                                             <td class="text-end"> <%=product.products[i].productId.salePrice * product.products[i].quantity%> </td>
+                                            <%sum = sum + product.products[i].productId.salePrice * product.products[i].quantity %>
                                         </tr>
                                         <%}%>
                                         
                                     </tbody>
                                 </table>
                             </div> <!-- table-responsive// -->
-                            <a class="btn btn-primary" href="page-orders-tracking.html">View Order Tracking</a>
-                        </div> <!-- col// -->
+                            <!-- <a class="btn btn-primary" href="page-orders-tracking.html">View Order Tracking</a> -->
+                        </div> 
+                        
+                        <div class="row mb-50">
+                           <div class="col-lg-6 col-md-12">
+                                <div class=" p-md-4 p-30 border-radius cart-totals">
+                                    <div class="heading_s1 mb-3">
+                                        <h4>Totals</h4>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="cart_total_label">Cart Subtotal</td>
+                                                    <td class="cart_total_amount"><span class="font-lg fw-900 text-brand">₹<%=sum%></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cart_total_label">Shipping</td>
+                                                    <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cart_total_label">Total</td>
+                                                    <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand">₹<%=sum%></span></strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- col// -->
                         <!-- <div class="col-lg-1"></div>
                         <div class="col-lg-4"> -->
                             <!-- <div class="box shadow-sm bg-light">

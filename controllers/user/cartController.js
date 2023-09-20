@@ -134,7 +134,7 @@ const deleteCartItem = async (req, res) => {
 
 
     console.log(user);
-    console.log(userCart.address[0]);
+    console.log(userCart);
 
     res.render('checkout',{
       user: user,

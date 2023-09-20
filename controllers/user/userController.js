@@ -350,9 +350,21 @@ const addAddress =  async (req,res)=>{
     }
 }
 
+//reset password
+
+const resetPassword = async (req,res)=>{
+    try {
+        console.log(req.body);
+    } catch (error) {
+        
+    }
+
+}
+
 //load about
 
 const loadAbout = async (req,res)=>{
+
     try {
         const userData = req.session.user
         res.render('about',{userData: userData})
@@ -379,6 +391,7 @@ module.exports = {
     editAddress,
     loadAddAddress,
     addAddress,
-    loadAbout
+    loadAbout,
+    resetPassword
     
 };

@@ -27,7 +27,26 @@ const loadOrderDetails = async (req,res) => {
     }
 }
 
+//change order status
+
+const changeStatus = async (req, res) => {
+    try {
+        console.log(req.body.status);
+        const id = req.body.id;
+        console.log(id);
+        await Order.findByIdAndUpdate(id, { orderStatus: req.body.status });
+        if(req.body.status === "DELIVERED"){
+            await Order.findByIdAndUpdate(id, { deliveredOn: new Date() });
+        }
+        res.redirect(`/admin/order-details/${id}`);
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
 module.exports = {
     loadOrders,
-    loadOrderDetails
+    loadOrderDetails,
+    changeStatus
 }

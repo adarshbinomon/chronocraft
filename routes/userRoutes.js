@@ -37,6 +37,7 @@ user_route.get('/edit-address/:id',auth.isLogIn, userController.loadEditAddress)
 user_route.post('/edit-address/',auth.isLogIn, userController.editAddress)
 user_route.get('/add-address',auth.isLogIn, userController.loadAddAddress)
 user_route.post('/add-address', userController.addAddress)
+user_route.post('/reset-password',userController.resetPassword)
 user_route.get('/about', userController.loadAbout)
 
 
@@ -48,7 +49,7 @@ user_route.get('/checkout',auth.isLogIn, cartController.loadCheckout)
 
 user_route.post('/checkout', orderController.checkout)
 user_route.get('/order-details/:id',auth.isLogIn,orderController.loadOrderDetails)
-user_route.get('/order-cancel/:id',orderController.cancelOrder)
+user_route.post('/order-cancel/:id',orderController.cancelOrder)
 user_route.post('/verify-payment',orderController.verifyPayment)
 user_route.get('/order-success',orderController.orderSuccess)
 

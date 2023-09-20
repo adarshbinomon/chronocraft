@@ -89,5 +89,6 @@ admin_route.get('/block-user/:id', userManagementController.blockOrUnblockUser)
 
 admin_route.get('/orders',orderManagementController.loadOrders)
 admin_route.get('/order-details/:id',orderManagementController.loadOrderDetails)
+admin_route.post('/change-status/:id',orderManagementController.changeStatus)
 
 module.exports = admin_route;
