@@ -354,9 +354,23 @@ const addAddress =  async (req,res)=>{
 
 const resetPassword = async (req,res)=>{
     try {
-        console.log(req.body);
+        const password = req.body.oldPassword;
+        const newPassword = req.body.newPassword;
+        const user = await User.findById(req.session.user_id);
+        const passwordMatch = await bcrypt.compare(password,user.password)
+
+        if(passwordMatch){
+            const sPassword = await securePassword(newPassword);
+
+            await User.updateOne({_id: req.session.user_id},{password: sPassword})
+            res.status(200).json({success: true})
+        }else{
+            console.log('wrong password');
+            res.status(200).json({success: false});
+        }
+
     } catch (error) {
-        
+     console.log(error.message);   
     }
 
 }
@@ -370,6 +384,30 @@ const loadAbout = async (req,res)=>{
         res.render('about',{userData: userData})
     } catch (error) {
         console.log(error.message);
+    }
+}
+
+//search
+
+const searchResult = async (req,res)=>{
+    try {
+        console.log(req.body);
+        const userData = req.session.user;
+        const search = req.body.search;
+        const result = await Product.find({
+            $or:
+            [
+                {productName: { $regex: search, $options: "i"}},
+                {category: { $regex: search, $options: "i"}}
+            ]
+        })
+
+        console.log(result);
+        res.render('categoryFind',{
+            products : result,
+            userData : userData
+        })    } catch (error) {
+        console.log(error.message)
     }
 }
 
@@ -392,6 +430,7 @@ module.exports = {
     loadAddAddress,
     addAddress,
     loadAbout,
-    resetPassword
+    resetPassword,
+    searchResult
     
 };

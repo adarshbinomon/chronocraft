@@ -58,7 +58,12 @@ const orderSchema = new mongoose.Schema({
     },
     deliveredOn:{
         type: Date
+    },
+    returnReason:{
+        type: String
     }
+
+
 });
 
 module.exports = mongoose.model('Order',orderSchema);

@@ -45,7 +45,7 @@ const loadOrderDetails = async (req,res)=>{
   try {
     console.log(req.body);
     const userId = req.session.user_id;
-    const user = req.session.user;
+    const user = await User.findById(req.session.user_id);
     const cart = await User.findById(req.session.user_id, { cart: 1, _id: 0 });
     console.log(cart.cart);
     console.log(req.body);
@@ -70,10 +70,13 @@ const loadOrderDetails = async (req,res)=>{
     if (orderSuccess) {
       for (const cartItem of user.cart) {
         const product = await Product.findById(cartItem.productId);
+        console.log('ggggggggggg');
+        console.log(product);
 
         if (product) {
           product.quantity -= cartItem.quantity;
           await product.save();
+          console.log('quantity decreased');
         }
       }
 
@@ -187,11 +190,28 @@ const orderSuccess = async (req,res)=>{
   }
 }
 
+// return
+
+const returnProduct = async(req,res)=>{
+  try {
+    console.log(req.body);
+    const reason = req.body.reason;
+    const id = req.body.id;
+    await Order.findByIdAndUpdate({_id : new mongoose.Types.ObjectId(id)}, {$set : {returnReason : reason, orderStatus : "RETURNED"}}).lean()
+
+    return res.status(200).json({success: true})
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ status: 'error', msg: 'Cannot return product' });
+  }
+}
+
 
 module.exports= {
     loadOrderDetails,
     checkout,
     cancelOrder,
     verifyPayment,
-    orderSuccess
+    orderSuccess,
+    returnProduct
 }

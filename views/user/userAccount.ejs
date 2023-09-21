@@ -408,7 +408,7 @@
                     oldPassword,
                     newPassword
                 },
-                success: function(){
+                success: function(res){
                     if(res.success){
                         Swal.fire({
                         // position: 'top-end',
@@ -420,8 +420,8 @@
                         })
                     }else{
                         Swal.fire(
-                        "The new Passwords doesn't match",
-                        "The passwords must match",
+                        "The current password doesn't match",
+                        "The password change failed",
                         'error'
                         )
                     }
