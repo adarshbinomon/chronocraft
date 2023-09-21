@@ -22,7 +22,7 @@ const razorpay = new Razorpay({
 const loadOrderDetails = async (req,res)=>{
     try {
         const orderId = req.params.id;
-        const userData = req.session.user;
+        const userData = await User.findById(req.session.user_id);
         // const order= await Order.findById(orderId);
         const order = await Order.findOne({_id: orderId}).populate('products.productId')
         console.log('details of 0th product');

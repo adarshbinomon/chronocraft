@@ -57,6 +57,7 @@ admin_route.use(bodyParser.urlencoded({ extended: true }));
 const adminController = require("../controllers/admin/adminController");
 const categoryController =  require('../controllers/admin/categoryController')
 const productController =  require('../controllers/admin/productController')
+const couponController =  require('../controllers/admin/couponController')
 const userManagementController =  require('../controllers/admin/userManagementController')
 const orderManagementController =  require('../controllers/admin/orderManagementController')
 const { isLogIn } = require("../middleware/userAuth");
@@ -90,5 +91,11 @@ admin_route.get('/block-user/:id', userManagementController.blockOrUnblockUser)
 admin_route.get('/orders',orderManagementController.loadOrders)
 admin_route.get('/order-details/:id',orderManagementController.loadOrderDetails)
 admin_route.post('/change-status/:id',orderManagementController.changeStatus)
+
+admin_route.get('/coupons',couponController.loadCoupon)
+admin_route.get('/add-coupon',couponController.loadAddCoupon)
+admin_route.post('/add-coupon',couponController.addCoupon)
+admin_route.get('/edit-coupon',couponController.editCoupon)
+admin_route.get('/change-status-coupon/:id',couponController.changeStatusCoupon)
 
 module.exports = admin_route;

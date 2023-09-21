@@ -2,24 +2,30 @@ const User = require('../../model/userModel');
 const Product = require('../../model/productModel');
 const Category = require('../../model/categoryModel');
 const Order = require('../../model/orderModel');
+const Coupon = require('../../model/couponModel');
 
 //load cart
 
 const loadCart = async (req,res)=>{
     try {
-        const userData = req.session.user
+        const userData = await User.findById(req.session.user_id);
         const userCart = await User.findOne({_id: req.session.user_id}).populate('cart.productId')
+        const coupons = await Coupon.find({ users: { $ne: userData._id } });
+        console.log(coupons);
+        console.log('coupons');
+
         // console.log(JSON.stringify(userCart));
         let grandTotal=0;
         for(let i =0;i<userCart.cart.length;i++){
             grandTotal= grandTotal + parseInt(userCart.cart[i].productId.salePrice)* parseInt(userCart.cart[i].quantity)
         }
-        console.log('grandTotal'+grandTotal);
+        // console.log('grandTotal'+grandTotal);
         // console.log(cartItems);
         res.render('cart',{
           userCart: userCart,
           grandTotal: grandTotal,
-          userData: userData
+          userData: userData,
+          coupons: coupons
         })
     } catch (error) {
         console.log(error.message);
@@ -128,16 +134,17 @@ const deleteCartItem = async (req, res) => {
 
   const loadCheckout = async (req,res)=>{
    try {
-    const user = req.session.user;
-    const userData = req.session.user;
+    const userData = await User.findById(req.session.user_id);
     const userCart = await User.findOne({_id: req.session.user_id}).populate('cart.productId')
 
 
-    console.log(user);
+    // console.log(user);
     console.log(userCart);
 
+    req.session.returnTo1 = '/checkout'
+
     res.render('checkout',{
-      user: user,
+      user: userData,
       userCart: userCart,
       userData: userData
     })

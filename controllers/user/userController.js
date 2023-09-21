@@ -66,7 +66,7 @@ const sendMail = async (name, email) => {
 //load signup
 const loadRegister = async (req, res) => {
     try {
-        const userData = req.session.user;
+        const userData = await User.findById(req.session.user_id);
         res.render('signup',{
             userData: userData
         });
@@ -130,7 +130,7 @@ const verifyOtp = async (req, res) => {
 
 const loadLogin = async (req,res)=>{
     try {
-        const userData = req.session.user;
+        const userData = await User.findById(req.session.user_id);
         res.render('login',{
             userData: userData
         })
@@ -186,7 +186,7 @@ const loadHome = async (req,res)=>{
         const categories = await Category.find({isListed: true});
         const products = await Product.find({isListed: true});
         console.log(categories);
-        const userData = req.session.user;
+        const userData = await User.findById(req.session.user_id);
         res.render('home',{
             categories: categories ,
             products: products,
@@ -201,7 +201,7 @@ const loadHome = async (req,res)=>{
 const loadProduct =  async (req,res)=>{
     try {
         const id = req.params.id;
-        const userData = req.session.user;
+        const userData = await User.findById(req.session.user_id);
         const product = await Product.findById(id);
         res.render('productDetails',{
             product: product,
@@ -214,14 +214,29 @@ const loadProduct =  async (req,res)=>{
 //load category specific products
 const loadCategory =async (req,res)=>{
     try {
-        const userData = req.session.user;
+        const userData = await User.findById(req.session.user_id);
         const id = req.params.id;
+        
+        var page = 1;
+        if(req.query.page){
+            page = req.query.page;
+        }
+        const limit = 2;
+
         const category = await Category.findById(id);
         const products = await Product.find({category: category.name})
+        .limit(limit * 1)
+        .skip((page-1) * limit)
+        .exec();
+        
+        const count = await Product.find({category: category.name}).countDocuments();
+
         console.log(products);
         res.render('categoryFind',{
             products : products,
-            userData : userData
+            userData : userData,
+            totalPages: Math.ceil(count/limit),
+            page: page
         })
     } catch (error) {
         console.log(error.message);
@@ -248,7 +263,7 @@ const loadaccount = async (req,res)=>{
 const loadEditAddress = async (req,res)=>{
     try {
         const addressIndex = req.params.id;
-        const userData = req.session.user;
+        const userData = await User.findById(req.session.user_id);
         const user = req.session.user;
         const address = user.address[addressIndex]
         console.log('edit address details');
@@ -312,7 +327,7 @@ const editAddress = async (req,res)=>{
 // load add address
 const loadAddAddress = async (req,res)=>{
     try {
-        const userData = req.session.user
+        const userData = await User.findById(req.session.user_id)
         res.render('addAddress',{userData: userData})
     } catch (error) {
         console.log(error.message);
@@ -343,7 +358,12 @@ const addAddress =  async (req,res)=>{
         user.address.push(address);
         await user.save();
 
+        if(req.session.returnTo1){
+        res.redirect(req.session.returnTo1)
+        }else{
         res.redirect('account')
+}
+
 
     } catch (error) {
         console.log(error.message);
@@ -380,7 +400,7 @@ const resetPassword = async (req,res)=>{
 const loadAbout = async (req,res)=>{
 
     try {
-        const userData = req.session.user
+        const userData = await User.findById(req.session.user_id)
         res.render('about',{userData: userData})
     } catch (error) {
         console.log(error.message);
@@ -392,8 +412,17 @@ const loadAbout = async (req,res)=>{
 const searchResult = async (req,res)=>{
     try {
         console.log(req.body);
-        const userData = req.session.user;
+        const userData = await User.findById(req.session.user_id);
         const search = req.body.search;
+
+        var page = 1;
+        if(req.query.page){
+            page = req.query.page;
+        }
+        const limit = 3;
+
+
+
         const result = await Product.find({
             $or:
             [
@@ -401,12 +430,31 @@ const searchResult = async (req,res)=>{
                 {category: { $regex: search, $options: "i"}}
             ]
         })
+        .limit(limit * 1)
+        .skip((page-1) * limit)
+        .exec();
+        
+        const count = await Product.find({
+            $or:
+            [
+                {productName: { $regex: search, $options: "i"}},
+                {category: { $regex: search, $options: "i"}}
+            ]
+        })
+        .countDocuments();
+        console.log(count);
+        console.log(Math.ceil(count/limit));
+        console.log(page);
 
         console.log(result);
         res.render('categoryFind',{
             products : result,
-            userData : userData
-        })    } catch (error) {
+            userData : userData,
+            totalPages: Math.ceil(count/limit),
+            page: page
+        })    
+        
+    } catch (error) {
         console.log(error.message)
     }
 }

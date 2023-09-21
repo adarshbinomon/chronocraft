@@ -290,6 +290,33 @@
                         <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
                         <div class="row mb-50"> 
                             <div class="col-lg-6 col-md-12">
+                                
+                                <div class="mb-30 mt-50">
+                                    <div class="heading_s1 mb-3">
+                                        <h4>Apply Coupon</h4>
+                                    </div>
+                                    <div class="total-amount">
+                                        <div class="left">
+                                            <div class="coupon">
+                                                <form action="#" target="_blank">
+                                                    <div class="form-row row justify-content-center">
+                                                        <div class="form-group col-lg-6">
+                                                            <select class="form-select" name="coupon">                                                            <% for (var i = 0; i < coupons.length; i++) { %>
+                                                                <option value="<%= coupons[i]._id %>"><%= coupons[i].couponName %></option>
+                                                            <% } %></div>  
+                                                        </select>                                                      
+                                                    </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <button onclick="applycoupon()" class="btn  btn-sm"><i class="fi-rs-label mr-10"></i>Apply</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12">
                                 <div class="border p-md-4 p-30 border-radius cart-totals">
                                     <div class="heading_s1 mb-3">
                                         <h4>Cart Totals</h4>
@@ -346,6 +373,7 @@
         </div>
     </div>
 <!-- scripts -->
+
 <script>
     function cartEmpty() {
         Swal.fire(
@@ -354,6 +382,8 @@
         )
     }
 </script>
+
+
     
     <script>
     function changeQuantity(productId,count,price,subTotal,cartSubTotal,total,quantity){
