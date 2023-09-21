@@ -266,13 +266,8 @@
                                                 <input required="" type="number" name="otp" placeholder="OTP">
                                             </div>
                                             <div class="login_footer form-group">
-                                                <!-- <div class="chek-form">
-                                                    <div class="custome-checkbox">
-                                                        <input class="form-check-input" type="checkbox" required="" name="checkbox" id="exampleCheckbox12" value="">
-                                                        <label class="form-check-label" for="exampleCheckbox12"><span>I agree to terms &amp; Policy.</span></label>
-                                                    </div>
-                                                </div> -->
-                                                <a href="page-privacy-policy.html"><i class="fi-rs-book-alt mr-5 text-muted"></i>Lean more</a>
+                                                <button id="myButton" class="btn-s btn-fill-out btn-block hover-up" style="display: none;">Resend OTP</button>
+                                                
                                             </div>
                                             <div class="form-group">
                                                 <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Submit &amp; Register</button>
@@ -320,6 +315,35 @@
             </div>
         </div>
     </div>
+    <!-- script -->
+    <script>
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        const myButton = document.getElementById("myButton");
+      
+        // Function to show the button
+        function showButton() {
+          myButton.style.display = "block";
+        }
+      
+        // Function to hide the button after it's clicked
+        function hideButton() {
+          myButton.style.display = "none";
+          setTimeout(showButton, 30000); // Show the button again after 30 seconds
+        }
+      
+        // Add a click event listener to hide the button when clicked
+        myButton.addEventListener("click", function () {
+          hideButton();
+        });
+      
+        // Initial call to show the button after 30 seconds
+        setTimeout(showButton, 30000);
+      });
+      
+      
+    </script>
+    <!-- script -->
     <!-- Vendor JS-->
     <script src="/assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="/assets/js/vendor/jquery-3.6.0.min.js"></script>

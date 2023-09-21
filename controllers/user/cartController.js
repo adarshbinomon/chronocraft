@@ -34,7 +34,7 @@ const loadCart = async (req,res)=>{
 
 //add to cart
 
-const addToCart = async (req,res)=>{
+const addToCart = async (req,res) => {
     try {
         console.log(req.body);
         const productId = req.body.productId;
@@ -77,7 +77,7 @@ const addToCart = async (req,res)=>{
 
 // change quantity in cart
 
-const changeQuantity = async (req,res)=>{
+const changeQuantity = async (req,res) => {
     console.log(req.body)
     req.body.count = parseInt(req.body.count)
     try {
@@ -132,7 +132,7 @@ const deleteCartItem = async (req, res) => {
 
   //load checkout
 
-  const loadCheckout = async (req,res)=>{
+  const loadCheckout = async (req,res) => {
    try {
     const userData = await User.findById(req.session.user_id);
     const userCart = await User.findOne({_id: req.session.user_id}).populate('cart.productId')
@@ -154,6 +154,33 @@ const deleteCartItem = async (req, res) => {
    }
   }
 
+  //apply coupon
+
+  const applyCoupon= async (req,res) => {
+    try {
+      name = req.body.coupon
+      console.log(req.body.coupon);
+      const userData = await User.findById(req.session.user_id)
+      const coupon = await Coupon.find({couponName: name, users: { $ne: userData._id } });
+
+      if(coupon.length>0){
+        res.status(200).json({
+          success: true,
+          coupon: coupon
+        })
+      }else{
+        res.status(200).json({
+          success: false
+        });
+
+      }
+
+      console.log(coupon);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
  
 module.exports = {
     loadCart,
@@ -161,5 +188,6 @@ module.exports = {
     changeQuantity,
     deleteCartItem,
     loadCheckout,
+    applyCoupon
 
 }
