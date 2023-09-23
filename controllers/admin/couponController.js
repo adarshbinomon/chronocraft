@@ -36,7 +36,8 @@ const addCoupon = async(req,res)=>{
             couponName: req.body.couponName,
             discount: req.body.discount,
             isListed: req.body.isListed,
-            minAmt: req.body.minAmt
+            minAmt: req.body.minAmt,
+            maxDiscount: req.body.maxDiscount
         })
 
         console.log(coupon);

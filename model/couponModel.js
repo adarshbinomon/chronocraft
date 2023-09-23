@@ -18,6 +18,10 @@ const couponSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    maxDiscount: {
+        type: String,
+        required: true
+    },
     users: {
         type: Array
     }

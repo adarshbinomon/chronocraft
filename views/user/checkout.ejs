@@ -257,8 +257,11 @@
                                         <tr>
                                             <th>SubTotal</th>
                                             <td class="product-subtotal" colspan="2">₹<%=sum%></td>
-                                            <input type="hidden" name="total" value="<%=sum%> ">
-
+                                            
+                                        </tr>
+                                        <tr>
+                                            <th>Coupon Discount</th>
+                                            <td colspan="2" id="couponDiscount"><em>0</em></td>
                                         </tr>
                                         <tr>
                                             <th>Shipping</th>
@@ -266,12 +269,36 @@
                                         </tr>
                                         <tr>
                                             <th>Total</th>
-                                            <td colspan="2" class="product-subtotal">₹<span class="font-xl text-brand fw-900"><%=sum%></span></td>
-                                        </tr>
+                                            <td colspan="2" class="product-subtotal">₹<span id="total" class="font-xl text-brand fw-900"><%=sum%></span></td>
+                                            <input type="hidden" id="total1" name="total" value="<%=sum%>" >
                                     </tbody>
                                 </table>
                             </div>
                             <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                            <div class="mb-30 mt-50">
+                                <div class="heading_s1 mb-3">
+                                    <h4>Apply Coupon</h4>
+                                </div>
+                                <div class="total-amount">
+                                    <div class="left">
+                                        <div class="coupon">
+                                            <form action="/apply-coupon" id="applyCoupon">
+                                                <div class="form-row row justify-content-center">
+                                                    <div class="form-group col-lg-6">
+                                                        <input class="font-medium" id="coupon" name="couponName" placeholder="Enter Your Coupon">
+                                                    </div>
+                                                    <div class="form-group col-lg-6">
+                                                        <a type="" onclick="couponApply()" class="btn  btn-sm"><i class="fi-rs-label mr-10"></i>Apply</a>
+                                                    </div>
+                                                    <div class="">
+                                                        <p class="text-danger" id="message" style="text-align: left; margin-left: 0;"></p>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="payment_method">
                                 <div class="mb-25">
                                     <h5>Payment</h5>
@@ -323,6 +350,36 @@
     </div>
  <!-- razorpay integration -->
  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+ 
+ <script>
+    //apply coupon
+    function couponApply(){
+        alert('hi')
+        event.preventDefault();
+        const coupon = document.getElementById('coupon').value
+        const total = document.getElementById('total1').value
+        alert(coupon)
+        alert(total)
+        $.ajax({
+            url: '/apply-coupon',
+            method: 'post',
+            data: {
+                coupon,
+                total
+            },
+            success: function(res){
+                alert(res.coupon.couponName)
+                alert(res.newTotal)
+                alert(res.discount)
+                alert(res.newTotal)
+
+                document.getElementById('couponDiscount').innerHTML = res.discount
+                document.getElementById('total').innerHTML = res.newTotal
+            }
+        })
+    }
+</script>
+
  <script>
 
     $(document).ready(function(){

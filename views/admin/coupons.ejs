@@ -217,6 +217,7 @@
                                 <th scope="col">Discount %</th>
                                 <th scope="col">isListed</th>
                                 <th scope="col">Min Order Price</th>
+                                <th scope="col">Max Discount</th>
                                 <th scope="col">Actions</th>
                             </tr>
                         </thead>
@@ -228,6 +229,7 @@
                                       <td><%= coupons[i].discount %></td>
                                       <td><%= coupons[i].isListed %></td>
                                       <td><%= coupons[i].minAmt %></td>
+                                      <td><%= coupons[i].maxDiscount%></td>
                                       <td> <div class="d-flex">
                                         <div class="d-flex">
                                          <div class="user-container" data-coupon-id="<%= coupons[i]?._id %>">

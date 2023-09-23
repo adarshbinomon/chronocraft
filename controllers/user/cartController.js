@@ -158,24 +158,60 @@ const deleteCartItem = async (req, res) => {
 
   const applyCoupon= async (req,res) => {
     try {
-      name = req.body.coupon
-      console.log(req.body.coupon);
+      const name = req.body.coupon
+      const total = req.body.total
+      console.log(req.body);
       const userData = await User.findById(req.session.user_id)
-      const coupon = await Coupon.find({couponName: name, users: { $ne: userData._id } });
+      const coupon = await Coupon.findOne({
+        $and: [
+          { couponName: name },
+          { users: { $nin: [req.session.user_id] } }
+        ]
+      });
+            console.log(coupon);
+            if(coupon){
+              console.log(coupon.minAmt<total);
+              if(parseInt(coupon.minAmt)<=parseInt(total)){
+                console.log('if');
+                const discountedAmt = total * coupon.discount / 100 ;
+                console.log('discountedAmt');
+                console.log(discountedAmt);
+                console.log(discountedAmt<coupon.maxDiscount);
+                if(discountedAmt<coupon.maxDiscount){
+                  var discount = discountedAmt;
+                }else{
+                  var discount = coupon.maxDiscount;
+                }
+                console.log('discount');
+                console.log(discount);
+                var newTotal = total - discount;
 
-      if(coupon.length>0){
-        res.status(200).json({
-          success: true,
-          coupon: coupon
-        })
-      }else{
-        res.status(200).json({
-          success: false
-        });
+                console.log('newTotal');
+                console.log(newTotal);
 
-      }
+                await Coupon.updateOne({couponName: name},{$push: {users: userData._id}})
+                res.status(200).json({
+                  success: true,
+                  coupon: coupon,
+                  newTotal: newTotal,
+                  discount: discount
+                })
+              }else{
+                console.log('big else');
+                res.status(200).json({
+                  success: false,
+                  message: 'coupon cannot be used'
+                });
+              }
+            }else{
+              console.log('coupon already used by the user');
+              res.status(200).json({
+                success: false,
+                message: 'coupon already used by the user'
+              });
 
-      console.log(coupon);
+            }
+
     } catch (error) {
       console.log(error.message);
     }

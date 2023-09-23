@@ -100,8 +100,13 @@ const verifyOtp = async (req, res) => {
     try {
         const userData = req.body;
         const enteredOtp = req.body.otp;
+        console.log(req.session.otp);
+        console.log(req.session.resendotp);
+        console.log('old'+req.session.id);
 
-        if (req.session.otp == enteredOtp) {
+        console.log(enteredOtp);
+
+        if (req.session.otp == enteredOtp || req.session.resendotp == enteredOtp) {
             const sPassword = await securePassword(userData.password);
             const user = new User({
                 name: userData.name,
@@ -459,6 +464,24 @@ const searchResult = async (req,res)=>{
     }
 }
 
+//resend otp
+
+const resendOtp = async (req,res) => {
+    try {
+        console.log(req.body);
+        const userData = req.body;
+       const resentOtp = await sendMail(userData.name, userData.email);
+       console.log('old'+req.session.otp);
+       console.log('old'+req.session.id);
+       req.session.otp = resentOtp
+       req.session.save();
+       console.log(req.session.otp);
+       console.log(resentOtp);
+    } catch (error) {
+     console.log(error.message);   
+    }
+}
+
 
 
 
@@ -479,6 +502,7 @@ module.exports = {
     addAddress,
     loadAbout,
     resetPassword,
-    searchResult
+    searchResult,
+    resendOtp
     
 };

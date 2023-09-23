@@ -40,6 +40,7 @@ user_route.post('/add-address', userController.addAddress)
 user_route.post('/reset-password',userController.resetPassword)
 user_route.get('/about', userController.loadAbout)
 user_route.post('/search',userController.searchResult)
+user_route.post('/resend-otp',userController.resendOtp)
 
 
 user_route.get('/cart',auth.isLogIn, cartController.loadCart)
