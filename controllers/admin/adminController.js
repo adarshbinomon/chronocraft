@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('../../model/userModel');
+const Order = require('../../model/orderModel');
 
 
 
@@ -49,7 +50,23 @@ const adminLogin = async(req,res)=>{
 const loadDashboard = async(req,res)=>{
     try {
         const adminData = await User.findById({_id:req.session.admin_id})
-        res.render('adminDashboard',{adminData:adminData})
+        const revenue = await Order.aggregate([
+            {
+              $group: {
+                _id: null, 
+                totalAmount: { $sum: "$totalAmount" } 
+              }
+            }
+          ]);
+
+        const totalRevenue = revenue[0].totalAmount;
+        console.log('totalRevenue');
+        console.log(totalRevenue);
+
+        res.render('adminDashboard',{
+            adminData:adminData,
+            totalRevenue: totalRevenue})
+                  
     } catch (error) {
         console.log(error.message); 
     }

@@ -14,6 +14,16 @@ const loadCategories = async (req,res) =>{
     }
 }
 
+//load add category
+
+const loadAddCategory = async(req,res) => {
+    try {
+        res.render('addCategory')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 // add category
 
 // const addCategory = async(req,res)=>{
@@ -152,6 +162,7 @@ const deleteCategory = async(req,res)=>{
 
 module.exports = {
     loadCategories,
+    loadAddCategory,
     addCategory,
     loadEditCategory,
     updateCategory,

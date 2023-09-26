@@ -70,6 +70,7 @@ admin_route.get('/logout',auth.isLogIn,adminController.logOut)
 admin_route.post('/login',adminController.adminLogin)
 
 admin_route.get('/categories',auth.isLogIn,categoryController.loadCategories)
+admin_route.get('/categories-add',auth.isLogIn,categoryController.loadAddCategory)
 admin_route.post('/categories',categoryUpload.single('image'),categoryController.addCategory)
 admin_route.get('/categories-edit/:id',auth.isLogIn,categoryController.loadEditCategory)
 admin_route.post('/categories-edit/:id',categoryUpload.single('image'),categoryController.updateCategory)
