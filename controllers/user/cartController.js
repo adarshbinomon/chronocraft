@@ -11,6 +11,7 @@ const loadCart = async (req,res)=>{
         const userData = await User.findById(req.session.user_id);
         const userCart = await User.findOne({_id: req.session.user_id}).populate('cart.productId')
         const coupons = await Coupon.find({ users: { $ne: userData._id } });
+        const categories = await Category.find();
         console.log(coupons);
         console.log('coupons');
 
@@ -25,7 +26,8 @@ const loadCart = async (req,res)=>{
           userCart: userCart,
           grandTotal: grandTotal,
           userData: userData,
-          coupons: coupons
+          coupons: coupons,
+          categories: categories
         })
     } catch (error) {
         console.log(error.message);
@@ -136,6 +138,8 @@ const deleteCartItem = async (req, res) => {
    try {
     const userData = await User.findById(req.session.user_id);
     const userCart = await User.findOne({_id: req.session.user_id}).populate('cart.productId')
+    const categories = await Category.find();
+
 
 
     // console.log(user);
@@ -146,7 +150,8 @@ const deleteCartItem = async (req, res) => {
     res.render('checkout',{
       user: userData,
       userCart: userCart,
-      userData: userData
+      userData: userData,
+      categories: categories
     })
    
   } catch (error) {

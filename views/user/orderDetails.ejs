@@ -260,19 +260,29 @@
                                                     <td class="cart_total_label">Shipping</td>
                                                     <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> Free Shipping</td>
                                                 </tr>
+                                                <%if(order.coupon !== "no coupon"){ %>
+                                                <tr>
+                                                    <td class="cart_total_label">Coupon</td>
+                                                    <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> <%=order.coupon%></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cart_total_label">Coupon Discount</td>
+                                                    <td class="cart_total_amount"> <i class="ti-gift mr-5"></i> <%=order.discount%></td>
+                                                </tr>
+                                                <%}%>
                                                 <tr>
                                                     <td class="cart_total_label">Total</td>
-                                                    <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand">₹<%=sum%></span></strong></td>
+                                                    <td class="cart_total_amount"><strong><span class="font-xl fw-900 text-brand">₹<%=sum - order.discount%></span></strong></td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <%if(order.orderStatus === "DELIVERED") { %>
-                                        <a class="btn btn-primary m-5" data-bs-toggle="modal" data-bs-target="#reasonModal" data-bs-title="Cancel" data-bs-route="/order-cancel/<%=order._id%>" data-bs-orderid="<%= order?._id %>">RETURN ORDER</a>
-                                    <%}else if(order.orderStatus !== "CANCELLED") {%>
-                                        <a class="btn btn-primary m-5" onclick="cancelOrder()" >CANCEL ORDER</a>
-                                        <!-- <a href="/order-cancel/<%=order._id%>" class="btn "></i>Cancel Order</a> -->
-                                    <%}%>
+                                    <% if (order.orderStatus === "DELIVERED") { %>
+                                        <a class="btn btn-primary m-5" data-bs-toggle="modal" data-bs-target="#reasonModal" data-bs-title="Cancel" data-bs-route="/order-cancel/<%= order._id %>" data-bs-orderid="<%= order?._id %>">RETURN ORDER</a>
+                                    <% } else if (order.orderStatus !== "CANCELLED" && order.orderStatus !== "RETURNED") { %>
+                                        <a class="btn btn-primary m-5" onclick="cancelOrder()">CANCEL ORDER</a>
+                                    <% } %>
+                                    
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-12">

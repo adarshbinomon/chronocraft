@@ -67,8 +67,11 @@ const sendMail = async (name, email) => {
 const loadRegister = async (req, res) => {
     try {
         const userData = await User.findById(req.session.user_id);
+        const categories = await Category.find();
+
         res.render('signup',{
-            userData: userData
+            userData: userData,
+            categories: categories
         });
     } catch (error) {
         console.log(error.message);
@@ -79,13 +82,13 @@ const loadRegister = async (req, res) => {
 //add user
 const addUser = async (req, res) => {
     try {
-        const userData = req.body;
-        console.log(userData);
+        const userDetails = req.body;
+        console.log(userDetails);
 
-        if (userData) {
-            const otp = await sendMail(userData.name, userData.email);
+        if (userDetails) {
+            const otp = await sendMail(userDetails.name, userDetails.email);
             req.session.otp = otp;
-            res.render('otpVerify', { message: `OTP sent to ${userData.email}`, userData });
+            res.render('otpVerify', { message: `OTP sent to ${userDetails.email}`, userDetails });
         } else {
             res.render('signup');
         }
@@ -136,8 +139,11 @@ const verifyOtp = async (req, res) => {
 const loadLogin = async (req,res)=>{
     try {
         const userData = await User.findById(req.session.user_id);
+        const categories = await Category.find();
+
         res.render('login',{
-            userData: userData
+            userData: userData,
+            categories: categories
         })
     } catch (error) {
         console.log(error.message);
@@ -208,9 +214,12 @@ const loadProduct =  async (req,res)=>{
         const id = req.params.id;
         const userData = await User.findById(req.session.user_id);
         const product = await Product.findById(id);
+        const categories = await Category.find();
+
         res.render('productDetails',{
             product: product,
-            userData: userData})
+            userData: userData,
+            categories: categories})
     } catch (error) {
         console.log(error.message);
     }
@@ -220,7 +229,8 @@ const loadProduct =  async (req,res)=>{
 const loadCategory =async (req,res)=>{
     try {
         const userData = await User.findById(req.session.user_id);
-        const id = req.params.id;
+        const id = req.params.id;        
+
         
         var page = 1;
         if(req.query.page){
@@ -233,6 +243,8 @@ const loadCategory =async (req,res)=>{
         .limit(limit * 1)
         .skip((page-1) * limit)
         .exec();
+        const categories = await Category.find();
+
         
         const count = await Product.find({category: category.name}).countDocuments();
 
@@ -241,7 +253,8 @@ const loadCategory =async (req,res)=>{
             products : products,
             userData : userData,
             totalPages: Math.ceil(count/limit),
-            page: page
+            page: page,
+            categories: categories
         })
     } catch (error) {
         console.log(error.message);
@@ -253,11 +266,14 @@ const loadaccount = async (req,res)=>{
     try {
         const user = req.session.user;
         const orders = await Order.find({ customerId: req.session.user_id });
+        const categories = await Category.find();
+
         console.log('user>-----'+user);
         console.log('user.address.length>-----'+user.address.length);
         res.render('userAccount',{user:user,
             orders: orders,
-            userData: user
+            userData: user,
+            categories: categories
         })
     } catch (error) {
         console.log(error.message);
@@ -269,6 +285,8 @@ const loadEditAddress = async (req,res)=>{
     try {
         const addressIndex = req.params.id;
         const userData = await User.findById(req.session.user_id);
+        const categories = await Category.find();
+
         const user = req.session.user;
         const address = user.address[addressIndex]
         console.log('edit address details');
@@ -276,7 +294,8 @@ const loadEditAddress = async (req,res)=>{
         res.render('editAddress',{
             address: address,
             addressIndex: addressIndex,
-            userData: userData
+            userData: userData,
+            categories: categories
         })
     } catch (error) {
         console.log(error.message);
@@ -333,7 +352,12 @@ const editAddress = async (req,res)=>{
 const loadAddAddress = async (req,res)=>{
     try {
         const userData = await User.findById(req.session.user_id)
-        res.render('addAddress',{userData: userData})
+        const categories = await Category.find();
+
+        res.render('addAddress',{
+            userData: userData,
+            categories: categories
+        })
     } catch (error) {
         console.log(error.message);
     }
@@ -406,7 +430,12 @@ const loadAbout = async (req,res)=>{
 
     try {
         const userData = await User.findById(req.session.user_id)
-        res.render('about',{userData: userData})
+        const categories = await Category.find();
+
+        res.render('about',{
+            userData: userData,
+            categories: categories
+    })
     } catch (error) {
         console.log(error.message);
     }
@@ -418,6 +447,8 @@ const searchResult = async (req,res)=>{
     try {
         console.log(req.body);
         const userData = await User.findById(req.session.user_id);
+        const categories = await Category.find();
+
         const search = req.body.search;
 
         var page = 1;
@@ -456,7 +487,8 @@ const searchResult = async (req,res)=>{
             products : result,
             userData : userData,
             totalPages: Math.ceil(count/limit),
-            page: page
+            page: page,
+            categories: categories
         })    
         
     } catch (error) {
@@ -482,6 +514,18 @@ const resendOtp = async (req,res) => {
     }
 }
 
+//load contact
+
+const loadContact = async(req,res)=>{
+    try {
+        const userData = await User.findById(req.session.user_id) 
+
+        res.render('contact',{userData: userData})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 
@@ -503,6 +547,7 @@ module.exports = {
     loadAbout,
     resetPassword,
     searchResult,
-    resendOtp
+    resendOtp,
+    loadContact
     
 };

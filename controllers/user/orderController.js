@@ -24,6 +24,8 @@ const loadOrderDetails = async (req,res)=>{
     try {
         const orderId = req.params.id;
         const userData = await User.findById(req.session.user_id);
+        const categories = await Category.find();
+
         // const order= await Order.findById(orderId);
         const order = await Order.findOne({_id: orderId}).populate('products.productId')
         console.log('details of 0th product');
@@ -32,7 +34,8 @@ const loadOrderDetails = async (req,res)=>{
 
         res.render('orderDetails',{
           order: order,
-          userData: userData
+          userData: userData,
+          categories: categories
         })
 
     } catch (error) {
@@ -43,7 +46,7 @@ const loadOrderDetails = async (req,res)=>{
  //checkout
 
  const checkout = async (req, res) => {
-  try {
+  try {     
     console.log(req.body);
     const userId = req.session.user_id;
     const user = await User.findById(req.session.user_id);
@@ -140,7 +143,7 @@ const loadOrderDetails = async (req,res)=>{
             } else if (req.body.payment_option === "razorpay") {
         console.log('razorpay');
 
-        const amount = req.body.total * 100; // Amount in paise
+        const amount = total * 100; // Amount in paise
         const options = {
           amount: amount,
           currency: "INR",

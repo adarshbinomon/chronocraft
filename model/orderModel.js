@@ -48,7 +48,9 @@ const orderSchema = new mongoose.Schema({
         type: String,
         default: 'no coupon'
     },
+    
     shippingAddress : {},
+
     orderStatus: {
         type : String,
         default: "PENDING"
