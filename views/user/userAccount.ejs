@@ -256,7 +256,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <% for(let i=0;i<orders.length;i++) {  %>
+                                                            <% for(let i=orders.length-1;i>=0;i--) {  %>
                                                             <tr>
                                                                 <td><%=String(orders[i]._id).slice(-6)%></td>
                                                                 <td><%= String(orders[i].createdAt).slice(4, 16) %></td>

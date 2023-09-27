@@ -1,4 +1,7 @@
+
 (function ($) {
+    
+    
     "use strict";
 
     /*Sale statistics Chart*/
@@ -17,16 +20,16 @@
                         fill: true,
                         backgroundColor: 'rgba(44, 120, 220, 0.2)',
                         borderColor: 'rgba(44, 120, 220)',
-                        data: [18, 17, 4, 3, 2, 20, 25, 31, 25, 22, 20, 9]
+                        data: [18, 17, 4, 3, 2, 20, 25, 31, 25, 22, 20, 10]
                     },
-                    {
-                        label: 'Visitors',
-                        tension: 0.3,
-                        fill: true,
-                        backgroundColor: 'rgba(4, 209, 130, 0.2)',
-                        borderColor: 'rgb(4, 209, 130)',
-                        data: [40, 20, 17, 9, 23, 35, 39, 30, 34, 25, 27, 17]
-                    },
+                    // {
+                    //     label: 'Visitors',
+                    //     tension: 0.3,
+                    //     fill: true,
+                    //     backgroundColor: 'rgba(4, 209, 130, 0.2)',
+                    //     borderColor: 'rgb(4, 209, 130)',
+                    //     data: [40, 20, 17, 9, 23, 35, 39, 30, 34, 25, 27, 17]
+                    // },
                     {
                         label: 'Products',
                         tension: 0.3,

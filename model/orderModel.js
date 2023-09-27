@@ -46,7 +46,7 @@ const orderSchema = new mongoose.Schema({
 
     coupon: {
         type: String,
-        default: 'no coupon'
+       
     },
     
     shippingAddress : {},
