@@ -2,6 +2,7 @@ const User = require('../../model/userModel');
 const Product = require('../../model/productModel');
 const Category = require('../../model/categoryModel');
 const Order = require('../../model/orderModel');
+const Banner = require('../../model/bannerModel');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const dotenv = require('dotenv');
@@ -196,12 +197,13 @@ const loadHome = async (req,res)=>{
     try {
         const categories = await Category.find({isListed: true});
         const products = await Product.find({isListed: true});
-        console.log(categories);
+        const banners = await Banner.find({isListed: true});
         const userData = await User.findById(req.session.user_id);
         res.render('home',{
             categories: categories ,
             products: products,
-            userData: userData
+            userData: userData,
+            banners: banners
         })
     } catch (error) {
         console.log(error.message);
@@ -215,11 +217,17 @@ const loadProduct =  async (req,res)=>{
         const userData = await User.findById(req.session.user_id);
         const product = await Product.findById(id);
         const categories = await Category.find();
-
-        res.render('productDetails',{
-            product: product,
-            userData: userData,
+        console.log('try');
+        if(product){
+            console.log('if');
+            res.render('productDetails',{
+                product: product,
+                userData: userData,
             categories: categories})
+        }else{
+            console.log('else');
+            res.redirect('/error')
+        }
     } catch (error) {
         console.log(error.message);
     }
@@ -526,6 +534,16 @@ const loadContact = async(req,res)=>{
     }
 }
 
+//load error
+
+const error = async (req,res) => {
+    try {
+        res.render('errorPage')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 
@@ -548,6 +566,7 @@ module.exports = {
     resetPassword,
     searchResult,
     resendOtp,
-    loadContact
+    loadContact,
+    error
     
 };

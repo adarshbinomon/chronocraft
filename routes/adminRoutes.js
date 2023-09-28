@@ -24,7 +24,7 @@ admin_route.use(session({
     saveUninitialized: false, 
   }));
 
-  //multer
+  //multer-category
   const categoryStorage = multer.diskStorage({
     destination :(req,file,cb) => {
       cb(null,path.join(__dirname, '../public/assetsbackend/imgs/category'))
@@ -34,7 +34,19 @@ admin_route.use(session({
     }
   })
   const categoryUpload = multer({storage : categoryStorage})
+
+  //multer-banner
+  const bannerStorage = multer.diskStorage({
+    destination :(req,file,cb) => {
+      cb(null,path.join(__dirname, '../public/assetsbackend/imgs/banner'))
+    },
+    filename : (req, file, cb) => {
+      cb(null, Date.now() +'-'+ file.originalname)
+    }
+  })
+  const bannerUpload = multer({storage : bannerStorage})
   
+  //multer-product
   const productStorage = multer.diskStorage({
     destination :(req,file,cb) => {
       cb(null,path.join(__dirname, '../public/assetsbackend/imgs/products'))
@@ -58,6 +70,7 @@ const adminController = require("../controllers/admin/adminController");
 const categoryController =  require('../controllers/admin/categoryController')
 const productController =  require('../controllers/admin/productController')
 const couponController =  require('../controllers/admin/couponController')
+const bannerController =  require('../controllers/admin/bannerController')
 const userManagementController =  require('../controllers/admin/userManagementController')
 const orderManagementController =  require('../controllers/admin/orderManagementController')
 const { isLogIn } = require("../middleware/userAuth");
@@ -99,5 +112,9 @@ admin_route.get('/add-coupon',couponController.loadAddCoupon)
 admin_route.post('/add-coupon',couponController.addCoupon)
 admin_route.get('/edit-coupon',couponController.editCoupon)
 admin_route.get('/change-status-coupon/:id',couponController.changeStatusCoupon)
+
+admin_route.get('/banners',bannerController.loadBanners)
+admin_route.get('/add-banner',bannerController.loadAddBanner)
+admin_route.post('/add-banner',bannerUpload.single('image'),bannerController.addBanner)
 
 module.exports = admin_route;

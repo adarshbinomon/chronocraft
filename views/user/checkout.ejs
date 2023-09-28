@@ -210,7 +210,7 @@
                             <div class="col-lg-6">
                                 <div class="card mb-3 mb-lg-0">
                                     <div class="card-header">
-                                        <input class="form-check-input" value="<%= JSON.stringify(user.address[i]) %>" type="radio" name="address" id="address">
+                                        <input class="form-check-input" value="<%=user.address[i] %>" type="radio" name="address" id="address">
                                         <label class="form-check-label" for="flexRadioDefault1">
                                                 <h5 class="mb-0"> <%= user.address[i].addressType %></h5>
                                             </label>
@@ -403,7 +403,7 @@
                                 alert(res.reciept)
                                 alert("payment success")
                                 verifyPayment(response, res.order_id ,res.reciept)
-                                window.open("/order-success", "_self")
+                                // window.open("/order-success", "_self")
 
                             },
                             "prefill" : {
@@ -424,7 +424,7 @@
                         //alert(res.msg)
                     }
                     if (res.status) {
-                            window.open("/order-success", "_self")
+                            // window.open("/order-success", "_self")
                         } 
                 }
             })
@@ -432,19 +432,20 @@
     })
 
     function verifyPayment(payment, order, orderId) {
-            alert("cal comes")
+            alert("call comes")
             alert(orderId)
             alert(payment)
             alert(order)
             $.ajax({
                 url: '/verify-payment',
+                method: 'post',
                 data: {
                     payment,
                     order,
                     orderId
                 },
-                method: 'post',
                 success: function () {
+                    alert('success')
 
                     Swal.fire({
                         title: 'Order Placed Successfully!',

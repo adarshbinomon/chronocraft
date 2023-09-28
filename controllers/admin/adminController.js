@@ -54,6 +54,7 @@ const adminLogin = async(req,res)=>{
 const loadDashboard = async(req,res)=>{
     try {
         const adminData = await User.findById({_id:req.session.admin_id})
+       //revenue for display
         const revenue = await Order.aggregate([
             {
               $group: {
@@ -64,7 +65,7 @@ const loadDashboard = async(req,res)=>{
           ]);
 
         const totalRevenue = revenue[0].totalAmount.toLocaleString('en-IN');
-
+// counts for display
         const orderCount = await Order.count()
         const productCount = await Product.count()
         const categoryCount = await Category.count()
@@ -87,6 +88,8 @@ const loadDashboard = async(req,res)=>{
             }
           ])
         const mRevenue = monthlyRevenue[0].total.toLocaleString('en-IN')
+
+        //graph1
 
         const monthlySales = await Order.aggregate([
             {
@@ -125,6 +128,8 @@ const loadDashboard = async(req,res)=>{
         }
         // console.log("Formatted Result:", graphDataSales);
 
+        //graph2
+        
         const productCountData = await Product.aggregate([
             {
               $group: {

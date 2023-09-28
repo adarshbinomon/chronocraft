@@ -45,11 +45,13 @@ const orderSchema = new mongoose.Schema({
 	},
 
     coupon: {
-        type: String,
+        type: String
        
     },
     
-    shippingAddress : {},
+    shippingAddress : {
+        type: Object
+    },
 
     orderStatus: {
         type : String,

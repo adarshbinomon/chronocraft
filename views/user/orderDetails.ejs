@@ -18,6 +18,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/easyinvoice/dist/easyinvoice.min.js"></script>
+
+
+
 
 </head>
 
@@ -241,6 +245,7 @@
                         <div class="cart-action text-end">
                             <a href="/" class="btn "><i class="fi-rs-shopping-bag mr-10"></i>Continue Shopping</a>
                         </div>
+                    
                         <div class="divider center_icon mt-50 mb-50"><i class="fi-rs-fingerprint"></i></div>
                         <div class="row mb-50">
                            
@@ -312,6 +317,7 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    <a class="btn " onclick="invoicePrint('<%=order._id%>')">Print Invoice</a>
                                 </div>
                             </div>
                         </div>
@@ -432,6 +438,31 @@
             }
         }
     </script>
+<!-- print invoice -->
+   <!-- Include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    function invoicePrint(orderId) {
+        $.ajax({
+            url: '/print-invoice',
+            method: 'post',
+            data: { orderId },
+            success: function (res) {
+                alert('success')
+                // Pass 'res' directly to easyinvoice.createInvoice
+                easyinvoice.createInvoice(res, function (result) {
+                    alert('inner')
+                    // Use easyinvoice.save to save the PDF with a specified filename
+                    easyinvoice.download('chronocraft.pdf');   
+                    alert('finished')
+                });
+            }
+        });
+    }
+</script>
+
+
 
     <!-- Vendor JS-->
     <script src="/assets/js/vendor/modernizr-3.6.0.min.js"></script>

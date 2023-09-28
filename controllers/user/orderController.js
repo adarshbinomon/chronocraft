@@ -4,7 +4,9 @@ const Category = require('../../model/categoryModel');
 const Coupon = require('../../model/couponModel');
 const Order = require('../../model/orderModel');
 const Razorpay = require("razorpay");
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+var easyinvoice = require('easyinvoice');
+
 
 // const razorpay = new Razorpay({
 //     key_id: 'process.env.key_id',
@@ -98,7 +100,7 @@ const loadOrderDetails = async (req,res)=>{
       total = req.body.total;
     }
     // console.log(cart.cart);
-    // console.log(req.body);
+    console.log(req.body);
     const order = new Order({
       customerId: userId,
       quantity: req.body.quantity,
@@ -183,30 +185,42 @@ const loadOrderDetails = async (req,res)=>{
 
 //verify payment
 
-const verifyPayment = async(req, res) => {
+const verifyPayment = async (req, res) => {
   try {
-    console.log('this is id:',req.body.orderId);
-    console.log('this is id1:',req.body);
-    console.log('this is id2:',req.body.payment);
-    const kk = await Order.find({_id : new mongoose.Types.ObjectId(req.body.orderId)}).lean()
-    if(kk)
+    console.log('this is id:', req.body.orderId);
+    console.log('this is id1:', req.body);
+    console.log('this is id2:', req.body.payment);
+
+    const kk = await Order.findOne({ _id: new mongoose.Types.ObjectId(req.body.orderId) }).lean();
+
+    if (kk) {
       console.log(kk);
       console.log(req.body.orderId);
-      const crypto = require('crypto')
-    let hmac = crypto.createHmac('sha256', 'rzp_test_7ETyzh4jBTZxal');
-    hmac.update(req.body.payment.razorpay_order_id + "|" + req.body.payment.razorpay_payment_id);
-    hmac = hmac.digest('hex');
+      const crypto = require('crypto');
+      let hmac = crypto.createHmac('sha256', 'rzp_test_7ETyzh4jBTZxal');
+      hmac.update(req.body.payment.razorpay_order_id + "|" + req.body.payment.razorpay_payment_id);
+      hmac = hmac.digest('hex');
 
+      if (hmac === req.body.payment.razorpay_signature) {
+        console.log('call comes here');
+        console.log(typeof (req.body.orderId));
 
-    if (hmac == req.body.payment.razorpay_signature) {
-      console.log('call comes here');
-      console.log(typeof(req.body.orderId));
-      await Order.updateOne({_id : new mongoose.Types.ObjectId(req.body.orderId)},{$set : { paymentStatus : 'RECEIVED', orderStatus :"PLACED"}}).lean()
+        // Use async/await with updateOne and handle any errors
+        const updateResult = await Order.updateOne(
+          { _id: new mongoose.Types.ObjectId(req.body.orderId) },
+          { $set: { paymentStatus: 'RECEIVED', orderStatus: 'PLACED' } }
+        );
 
-      res.status(200).json({ status: 'success', msg: 'Payment verified' });
+        if (updateResult.nModified > 0) {
+          res.status(200).json({ status: 'success', msg: 'Payment verified' });
+        } else {
+          res.status(400).json({ status: 'error', msg: 'Payment verification failed' });
+        }
+      } else {
+        res.status(400).json({ status: 'error', msg: 'Payment verification failed' });
+      }
     } else {
-
-      res.status(400).json({ status: 'error', msg: 'Payment verification failed' });
+      res.status(404).json({ status: 'error', msg: 'Order not found' });
     }
   } catch (err) {
     console.error(err);
@@ -267,6 +281,76 @@ const returnProduct = async(req,res)=>{
   }
 }
 
+//print invoice
+
+const printInvoice = async (req,res)=> {
+  try {
+    console.log(req.body);
+    const orderId = req.body.orderId;
+    const orderData = await Order.findOne({_id: orderId}).populate('products.productId')
+    console.log(orderData.shippingAddress.name);
+    
+    const product = orderData.products.map((item, i) => {
+      return {
+        quantity: parseInt(item.quantity), // Use item.quantity
+        description: item.productId.productName, // Use item.productId.productName
+        price: parseInt(item.productId.salePrice), // Use item.productId.salePrice
+      };
+    });
+    
+
+  console.log(product);
+    var data = {
+      
+      "images": {
+          "logo": "/assets/imgs/theme/logo1.png"
+      },
+      // Your own data
+      "sender": {
+          "company": "Chronocraft",
+          "address": "Amrit Villas, Dani Street,78,Maradu",
+          "zip": "550855",
+          "city": "Ernakulam",
+          "state": "Kerala",
+          "country": "India"
+      },
+      // Your recipient
+      "client": orderData.shippingAddress,
+
+      "information": {
+          // Invoice number
+          "number": orderData._id
+
+      },
+      // The products you would like to see on your invoice
+      // Total values are being calculated automatically
+      "products": product,
+      // The message you would like to display on the bottom of your invoice
+      "bottom-notice": "Kindly pay your invoice within 15 days.",
+      // Settings to customize your invoice
+      "settings": {
+          "currency": "INR", // See documentation 'Locales and Currency' for more info. Leave empty for no currency.
+          // "locale": "nl-NL", // Defaults to en-US, used for number formatting (See documentation 'Locales and Currency')        
+          // "margin-top": 25, // Defaults to '25'
+          // "margin-right": 25, // Defaults to '25'
+          // "margin-left": 25, // Defaults to '25'
+          // "margin-bottom": 25, // Defaults to '25'
+          // "format": "A4", // Defaults to A4, options: A3, A4, A5, Legal, Letter, Tabloid
+          // "height": "1000px", // allowed units: mm, cm, in, px
+          // "width": "500px", // allowed units: mm, cm, in, px
+          // "orientation": "landscape", // portrait or landscape, defaults to portrait
+      }
+  };
+
+  console.log('data');
+  console.log(data);
+  
+  res.json(data);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 
 module.exports= {
     loadOrderDetails,
@@ -274,5 +358,6 @@ module.exports= {
     cancelOrder,
     verifyPayment,
     orderSuccess,
-    returnProduct
+    returnProduct,
+    printInvoice
 }

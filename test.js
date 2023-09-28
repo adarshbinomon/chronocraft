@@ -859,3 +859,36 @@
     </ul>
 </nav>
 </div>
+
+
+// data table
+
+<table class="table table-hover" id="dataTable">
+                    <thead>
+                      <tr>
+                        <th scope="col">id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Brand Name</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Sale Price</th>
+                        <th scope="col">isListed</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <% for(var i=0;i<products.length;i++){ %>
+                            <tr>
+                              <td><%= i+1 %></td>
+                              <td><%= products[i].productName %></td>
+                              <td><%= products[i].brandName %></td>
+                              <td><%= products[i].category %></td>
+                              <td><%= products[i].regularPrice %></td>
+                              <td><%= products[i].salePrice %></td>
+                              <td><%= products[i].isListed %></td>
+                              <td><%= products[i].quantity %></td>
+                              <td> <div class="d-flex"><a href="/admin/edit-product/<%=products[i]._id%>" class="btn-sm btn-info me-auto">Edit</a> <a type="button" href="/admin/delete-product/<%=products[i]._id%>" class="btn-sm btn-danger">Delete</a></div>
+                            </tr>
+                            <% } %>
+                  </table>

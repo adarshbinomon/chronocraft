@@ -321,8 +321,8 @@
             <div class="container">
                 <div class="breadcrumb">
                     <a href="index.html" rel="nofollow">Home</a>
-                    <span><%= product.category%></span> 
-                    <span><%= product.productName%></span>
+                    <span><%= product?.category%></span> 
+                    <span><%= product?.productName%></span>
                 </div>
             </div>
         </div>
@@ -340,9 +340,9 @@
                                         <!-- MAIN SLIDES -->
                                         <div class="product-image-slider">
 
-                                            <% for (let i = 0; i < product.image.length; i++) { %>   
+                                            <% for (let i = 0; i < product?.image.length; i++) { %>   
                                                 <figure class="border-radius-10">
-                                                    <img src="/assetsbackend/imgs/products/<%=product.image[i]%>"  alt="product image">
+                                                    <img src="/assetsbackend/imgs/products/<%=product?.image[i]%>"  alt="product image">
                                                 </figure>                                               
                                                  <% } %>
 
@@ -351,8 +351,8 @@
                                         </div>
                                         <!-- THUMBNAILS -->
                                         <div class="slider-nav-thumbnails pl-15 pr-15">
-                                            <% for (let i = 0; i < product.image.length; i++) { %>   
-                                                <img src="/assetsbackend/imgs/products/<%=product.image[i]%>" alt="product image">
+                                            <% for (let i = 0; i < product?.image.length; i++) { %>   
+                                                <img src="/assetsbackend/imgs/products/<%=product?.image[i]%>" alt="product image">
                                             <% } %>    
                                         </div>
                                     </div>
@@ -361,10 +361,10 @@
                                 <!-- </div> -->
                                 <div class="col-md-6 col-sm-12 col-xs-12">
                                     <div class="detail-info">
-                                        <h2 class="title-detail"><%= product.productName%></h2>
+                                        <h2 class="title-detail"><%= product?.productName%></h2>
                                         <div class="product-detail-rating">
                                             <div class="pro-details-brand">
-                                                <span> Brand: <a href="shop-grid-right.html"><%= product.brandName%></a></span>
+                                                <span> Brand: <a href="shop-grid-right.html"><%= product?.brandName%></a></span>
                                             </div>
                                             <div class="product-rate-cover text-end">
                                                 <div class="product-rate d-inline-block">
@@ -376,14 +376,14 @@
                                         </div>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
-                                                <ins><span class="text-brand"><%= product.salePrice%></span></ins>
-                                                <ins><span class="old-price font-md ml-15"><%= product.regularPrice%></span></ins>
+                                                <ins><span class="text-brand"><%= product?.salePrice%></span></ins>
+                                                <ins><span class="old-price font-md ml-15"><%= product?.regularPrice%></span></ins>
                                                 <span class="save-price  font-md color3 ml-15">20% Off</span>
                                             </div>
                                         </div>
                                         <div class="bt-1 border-color-1 mt-15 mb-15"></div>
                                         <div class="short-desc mb-30">
-                                            <p>L<%= product.description%></p>
+                                            <p>L<%= product?.description%></p>
                                         </div>
                                         <div class="product_sort_info font-xs mb-30">
                                             <ul>
@@ -420,10 +420,10 @@
                                                 <!-- <div class="detail-qty  radius"> -->
                                                     <div class="form-outline" style="width: 100px;">
                                                         <label class="form-label" for="typeNumber">Quantity</label>
-                                                        <input value="1" min="1" max="<%= product.quantity%>"  type="number" id="quantity" name="quantity" class="qty-val" />
+                                                        <input value="1" min="1" max="<%= product?.quantity%>"  type="number" id="quantity" name="quantity" class="qty-val" />
                                                     </div>
 
-                                                    <input type="hidden" class="productId" name="productId" value="<%= product._id %>">
+                                                    <input type="hidden" class="productId" name="productId" value="<%= product?._id %>">
                                                     <!-- </div> -->
                                                 <div class="product-extra-link2 mt-5">
                                                   <button type="submit" class="button button-add-to-cart">Add to cart</button>
@@ -446,7 +446,7 @@
                                         <ul class="product-meta font-xs color-grey mt-50">
                                             <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li>
                                             <li class="mb-5">Tags: <a href="#" rel="tag">lux</a>, <a href="#" rel="tag">men</a>, <a href="#" rel="tag">watches</a> </li>
-                                            <li>Stock:<span class="in-stock text-success ml-5"><%= product.quantity%> Items In Stock</span></li>
+                                            <li>Stock:<span class="in-stock text-success ml-5"><%= product?.quantity%> Items In Stock</span></li>
                                         </ul>
                                     </div>
                                     <!-- Detail Info -->
@@ -458,8 +458,8 @@
                                 <div class="col-lg-10 m-auto entry-main-content">
                                     <h2 class="section-title style-1 mb-30">Description</h2>
                                     <div class="description mb-50">
-                                        <p><%= product.description%></p>
-                                        <p><%= product.description%></p>
+                                        <p><%= product?.description%></p>
+                                        <p><%= product?.description%></p>
                                         <ul class="product-more-infor mt-30">
                                             <li><span>Type Of Packing</span> Bottle</li>
                                             <li><span>Color</span> Green, Pink, Powder Blue, Purple</li>

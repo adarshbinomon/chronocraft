@@ -11,6 +11,8 @@ const app = express();
 
 app.use(nocache());
 
+app.set('view engine', 'ejs');
+
 
 
 //routes
@@ -20,9 +22,17 @@ app.use(logger('dev'))
 app.use('/',userRoute)
 app.use('/admin',adminRoute)
 
+
+
 //load assets
 app.use('/assets',express.static(path.resolve(__dirname,"public/assets")))
 app.use('/assetsbackend',express.static(path.resolve(__dirname,"public/assetsbackend")))
+
+//error page
+
+app.use(function(req,res){
+    res.status(404).render('user/errorPage');
+});
 
 //start server
 app.listen(3000,()=>{

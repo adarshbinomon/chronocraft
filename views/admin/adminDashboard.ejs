@@ -158,15 +158,15 @@
     </script>
     <script>
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        alert('<%=graphDataSales%>')
+        //alert('<%=graphDataSales%>')
         const salesData = '<%=graphDataSales%>';
         const myArray = salesData.split(',');
         const numberArray = myArray.map(function (str) {
-        return parseFloat(str); // Use parseFloat() to convert a string to a number
+        return parseFloat(str); 
 });
 
-        alert(typeof(numberArray))
-        console.log(numberArray);
+        //alert(typeof(numberArray))
+        //console.log(numberArray);
         
         new Chart("myChart", {
           type: "line",
@@ -200,8 +200,8 @@
         });
         </script>
         <script>
-            alert('<%=categoryCounts%>')
-            alert('<%=categoryNames%>')
+           // alert('<%=categoryCounts%>')
+           // alert('<%=categoryNames%>')
             const Cnames = '<%=categoryNames%>'
             const cNamesArr = Cnames.split(',');
             const cCounts = '<%=categoryCounts%>'

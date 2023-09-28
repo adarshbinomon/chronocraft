@@ -43,6 +43,7 @@ user_route.post('/search',userController.searchResult)
 user_route.post('/resend-otp',userController.resendOtp)
 user_route.get('/contact',userController.loadContact)
 
+user_route.get('/error',userController.error)
 
 user_route.get('/cart',auth.isLogIn, cartController.loadCart)
 user_route.post('/add-to-cart',auth.isLogIn, cartController.addToCart)
@@ -57,6 +58,7 @@ user_route.get('/order-cancel/:id',orderController.cancelOrder)
 user_route.post('/verify-payment',orderController.verifyPayment)
 user_route.get('/order-success',orderController.orderSuccess)
 user_route.post('/return',orderController.returnProduct)
+user_route.post('/print-invoice',orderController.printInvoice)
 
 
 
