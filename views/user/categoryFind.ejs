@@ -328,10 +328,12 @@
                 <div class="row flex-row-reverse">
                     <div class="col-lg-9">
                         <div class="shop-product-fillter">
+                            <%if(products.length === 0){%>
                             <div class="totall-product">
-                                <p> We found <strong class="text-brand"><%=products.length%></strong> items for you!</p>
+                                <p>  <strong class="text-brand">OOPS! no products found</strong></p>
                             </div>
-                            <div class="sort-by-product-area">
+                            <%}%>
+                            <!-- <div class="sort-by-product-area">
                                 <div class="sort-by-cover mr-10">
                                     <div class="sort-by-product-wrap">
                                         <div class="sort-by">
@@ -370,7 +372,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="row product-grid-3">
                             <% for (let i = 0; i < products.length; i++) { %>   

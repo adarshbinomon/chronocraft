@@ -6,6 +6,7 @@ const Order = require('../../model/orderModel');
 const Razorpay = require("razorpay");
 const mongoose = require('mongoose');
 var easyinvoice = require('easyinvoice');
+const { stringify } = require('querystring');
 
 
 // const razorpay = new Razorpay({
@@ -109,7 +110,7 @@ const loadOrderDetails = async (req,res)=>{
       coupon: req.body.couponName,
       discount: discount,
       totalAmount: total,
-      shippingAddress: req.body.address,
+      shippingAddress: JSON.parse(req.body.address),
       paymentDetails: req.body.payment_option,
     });
     const orderSuccess = await order.save();
@@ -288,23 +289,26 @@ const printInvoice = async (req,res)=> {
     console.log(req.body);
     const orderId = req.body.orderId;
     const orderData = await Order.findOne({_id: orderId}).populate('products.productId')
-    console.log(orderData.shippingAddress.name);
+    console.log(orderData.shippingAddress);
     
     const product = orderData.products.map((item, i) => {
       return {
         quantity: parseInt(item.quantity), // Use item.quantity
         description: item.productId.productName, // Use item.productId.productName
         price: parseInt(item.productId.salePrice), // Use item.productId.salePrice
+        total: parseInt(item.totalAmount),
+        "tax-rate": 0
       };
     });
     
 
+  console.log('product');
   console.log(product);
     var data = {
       
-      "images": {
-          "logo": "/assets/imgs/theme/logo1.png"
-      },
+    //   "images": {
+    //       "logo": "/assets/imgs/theme/logo1.png"
+    //  },
       // Your own data
       "sender": {
           "company": "Chronocraft",
@@ -315,11 +319,22 @@ const printInvoice = async (req,res)=> {
           "country": "India"
       },
       // Your recipient
-      "client": orderData.shippingAddress,
+      "client": {
+        "company": orderData.shippingAddress.name,
+          "address": orderData.shippingAddress.addressLine1,
+          "zip": orderData.shippingAddress.pinCode,
+          "city": orderData.shippingAddress.city,
+          "state": orderData.shippingAddress.state,
+          "country": "INDIA"
+      },
 
       "information": {
           // Invoice number
-          "number": orderData._id
+          "number": orderData._id,
+          // Invoice data
+          "date": orderData.createdAt,
+        // Invoice due date
+          "due-date": orderData.createdAt
 
       },
       // The products you would like to see on your invoice
@@ -352,6 +367,10 @@ const printInvoice = async (req,res)=> {
 }
 
 
+
+
+
+
 module.exports= {
     loadOrderDetails,
     checkout,
@@ -359,5 +378,6 @@ module.exports= {
     verifyPayment,
     orderSuccess,
     returnProduct,
-    printInvoice
+    printInvoice,
+
 }

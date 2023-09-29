@@ -42,6 +42,7 @@ user_route.get('/about', userController.loadAbout)
 user_route.post('/search',userController.searchResult)
 user_route.post('/resend-otp',userController.resendOtp)
 user_route.get('/contact',userController.loadContact)
+user_route.post('/search-orderid',userController.orderSearch)
 
 user_route.get('/error',userController.error)
 

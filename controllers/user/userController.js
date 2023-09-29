@@ -162,7 +162,10 @@ const userLogin = async(req,res)=>{
         const userData = await User.findOne({email: email})
         if(userData){
             const passwordMatch = await bcrypt.compare(password,userData.password)
-            if(passwordMatch && userData.isAdmin===0 && userData.isActive ===true){
+        
+        if(userData.isActive === false ){
+            res.render('login',{message: 'Access to your account is currently  blocked by admin, contact admin for more details'})
+        }else if(passwordMatch && userData.isAdmin===0){
                 req.session.user_id = userData._id;
                 req.session.isActive = userData.isActive;
                 req.session.user = userData;
@@ -174,7 +177,7 @@ const userLogin = async(req,res)=>{
                     res.redirect('/')
                 }
             }else{
-                res.render('login',{message: 'Access to your account is currently  blocked by admin, contact admin for more details'})
+                res.render('login',{message: 'Email or Password Incorrect'})
             }
         }
     } catch (error) {
@@ -272,17 +275,39 @@ const loadCategory =async (req,res)=>{
 //load user account page
 const loadaccount = async (req,res)=>{
     try {
-        const user = req.session.user;
-        const orders = await Order.find({ customerId: req.session.user_id });
-        const categories = await Category.find();
+        if (req.query.orderSearch) {
+          req.session.orderSearch = req.query.orderSearch;
+        }
+        let search = req.session.orderSearch;
 
-        console.log('user>-----'+user);
-        console.log('user.address.length>-----'+user.address.length);
-        res.render('userAccount',{user:user,
-            orders: orders,
-            userData: user,
-            categories: categories
-        })
+        var page = 1;
+        if (req.query.page) {
+          page = req.query.page;
+        }
+        const limit = 15;
+        const count = await Order.find({
+          customerId: req.session.user_id,
+        }).countDocuments();
+    
+        const orderData = Order.find({ customerId: req.session.user_id }).sort({
+          createdAt: -1,
+        });
+        const orders = await paginateQuery(orderData, page, limit).exec();
+    
+        const userData = await User.findById(req.session.user_id);
+        const categories = await Category.find();
+        // console.log(userData.address[0].city);
+    
+        res.render("userAccount", {
+          userData: userData,
+          orders: orders,
+          categories: categories,
+          totalPages: Math.ceil(count / limit),
+          count: count,
+          page: page,
+          limit: limit,
+          search: search,
+        });
     } catch (error) {
         console.log(error.message);
     }
@@ -544,6 +569,64 @@ const error = async (req,res) => {
     }
 }
 
+//order search in use account
+
+function paginateQuery(query, page, limit) {
+    try {
+      const skip = (page - 1) * limit;
+      return query.skip(skip).limit(limit);
+    } catch (error) {
+      console.error("Error in paginateQuery:", error);
+      throw error;
+    }
+  }
+  
+  const orderSearch = async (req, res) => {
+    try {
+      if(req.query.orderSearch){
+  
+        req.session.orderSearch = req.query.orderSearch
+      }
+      let search = req.session.orderSearch;
+  
+      console.log("search:", search);
+  
+      console.log("vxcvcxvxxzcbzzzzzzzz" + search);
+      var page = 1;
+      if (req.query.page) {
+        page = req.query.page;
+      }
+      const limit = 5;
+      const orderData = Order.find({
+        customerId: req.session.user_id,
+        orderId: { $regex: new RegExp(search, "i") },
+      });
+  
+      const count = await Order.countDocuments({
+        customerId: req.session.user_id,
+        orderId: { $regex: new RegExp(search, "i") },
+      });
+      console.log("orderDataaaaaa" + orderData);
+  
+      const orders = await paginateQuery(orderData, page, limit).exec();
+  
+      const userData = await User.findById(req.session.user_id);
+      const categories = await Category.find();
+      res.render("userProfile", {
+        userData: userData,
+        orders: orders,
+        categories: categories,
+        totalPages: Math.ceil(count / limit),
+        count: count,
+        page: page,
+        limit: limit,
+        search : search
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
 
 
@@ -567,6 +650,7 @@ module.exports = {
     searchResult,
     resendOtp,
     loadContact,
-    error
+    error,
+    orderSearch
     
 };
