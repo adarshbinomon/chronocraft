@@ -64,6 +64,13 @@ const userSchema = new mongoose.Schema({
        },     
        quantity: Number,  
    }],
+    
+    wishlist : [{
+       productId: {
+         type: mongoose.Schema.Types.ObjectId,
+         ref: 'Product', 
+       }       
+   }],
    
    address: [addressSchema]
 

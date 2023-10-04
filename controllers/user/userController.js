@@ -580,6 +580,8 @@ function paginateQuery(query, page, limit) {
       throw error;
     }
   }
+
+ //order search 
   
   const orderSearch = async (req, res) => {
     try {
@@ -627,6 +629,76 @@ function paginateQuery(query, page, limit) {
     }
   };
 
+// wishlist
+
+const loadWishlist = async (req,res) => {
+    try {
+
+        const userData = await User.findById(req.session.user_id).populate('wishlist.productId')
+        console.log(userData);
+        const categories = await Category.find();
+
+        res.render('wishlist',
+            {
+                userData: userData,
+                categories: categories
+            })
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+// add to wishlist
+
+const addToWishlist = async (req,res) => {
+    try {
+        console.log('wishlist');
+        const productId = req.body.productId;
+        console.log();
+        
+        const userId = req.session.user_id;
+        const user = await User.findById(userId);
+
+        if(!user){
+            res.status(404).json({
+                success: false,
+                message: 'user not found'})
+        }
+
+        const existingItem = user.wishlist.find((item) => (
+            item.productId.equals(productId)
+          ));
+      
+        if (existingItem) {
+            res.status(200).json({
+                success: false,
+                message: 'product already in wishlist'})
+          } else {
+            user.wishlist.push({ productId});
+            await user.save();
+            res.status(200).json({
+                success: true,
+                message: 'product added to wishlist'
+            });
+
+          }
+      
+
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+// add to cart from wishlist
+
+const addToCartFromWishlist = async (req,res) =>{
+    try {
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 
 
@@ -651,6 +723,8 @@ module.exports = {
     resendOtp,
     loadContact,
     error,
-    orderSearch
+    orderSearch,
+    loadWishlist,
+    addToWishlist
     
 };

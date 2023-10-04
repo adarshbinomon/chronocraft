@@ -15,6 +15,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link rel="stylesheet" href="/assets/css/main.css?v=3.4">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 </head>
 
 <body>
@@ -427,7 +430,7 @@
                                                     <!-- </div> -->
                                                 <div class="product-extra-link2 mt-5">
                                                   <button type="submit" class="button button-add-to-cart">Add to cart</button>
-                                                  <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                                  <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%=product._id%>','<%=userData?._id%>')"><i class="fi-rs-heart"></i></a>
                                                   <!-- <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> -->
                                                 </div>
                                               </form>
@@ -901,6 +904,44 @@
         </div>
     </div>
     <!-- Vendor JS-->
+    <script>
+        function addToWishlist(productId, userId) {
+            if (!userId) {
+                Swal.fire(
+                    'Login Required',
+                    'You need to login to continue',
+                    'warning'
+                ).then(() => {
+                    window.location.href = '/login';
+                });
+            } else {
+                $.ajax({
+                    url: '/add-to-wishlist',
+                    method: 'post',
+                    data: {
+                        productId
+                    },
+                    success: function (res) {
+                        if (res.success) {
+                            Swal.fire(
+                                'Success',
+                                'Product added to wishlist successfully!',
+                                'success'
+                            );
+                        } else {
+                            Swal.fire(
+                                'Failed',
+                                'Product is already in your wishlist',
+                                'warning'
+                            );
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+    
+
     <script src="/assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="/assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="/assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>

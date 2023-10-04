@@ -15,6 +15,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/imgs/theme/favicon.png">
     <!-- Template CSS -->
     <link rel="stylesheet" href="/assets/css/main.css?v=3.4">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.27/dist/sweetalert2.all.min.js"></script>
+
 
 </head>
 
@@ -251,7 +254,7 @@
                                         </div>
                                         <div class="product-action-1">
                                             <!-- <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a> -->
-                                            <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
+                                            <a aria-label="Add To Wishlist" class="action-btn hover-up" onclick="addToWishlist('<%=products[i]._id%>','<%=userData._id%>')"><i class="fi-rs-heart"></i></a>
                                             <!-- <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> -->
                                         </div>
                                         <div class="product-badges product-badges-position product-badges-mrg">
@@ -273,7 +276,7 @@
                                             <span class="old-price"><%=products[i].regularPrice%></span>
                                         </div>
                                         <div class="product-action-1 show">
-                                            <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
+                                            <a aria-label="Add To Cart" class="action-btn hover-up" onclick="addToCart('<%=products[i]._id%>','<%=userData?._id%>')"><i class="fi-rs-shopping-bag-add"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -2347,6 +2350,81 @@
         </div>
     </div>
     <!-- Vendor JS-->
+
+<!-- addtocart -->
+    <script>
+        function addToCart(productId,userId) {
+            let quantity = 1;
+            if(!userId){
+                Swal.fire(
+                    'Login',
+                    'You need to login to continue',
+                    'warning'
+                ).then(()=>{
+                    window.location.href = '/login'
+                })
+            }else{
+            $.ajax({
+                url:'/add-to-cart',
+                method: 'post',
+                data: {
+                    productId,
+                    quantity
+                },
+                success: function () {
+                    Swal.fire(
+                    'Product added to Cart',
+                    'Product added to cart successfully!',
+                    'success'
+                    )
+
+                    document.getElementById('cartLength').innerHTML = '<%= userData?.cart.length + 1 %>';
+                }
+            })
+        }
+        }
+    </script>
+
+    <!-- addtowishlist -->
+    <script>
+        function addToWishlist(productId, userId) {
+            if (!userId) {
+                Swal.fire(
+                    'Login Required',
+                    'You need to login to continue',
+                    'warning'
+                ).then(() => {
+                    window.location.href = '/login';
+                });
+            } else {
+                // alert(productId)
+                $.ajax({
+                    url: '/add-to-wishlist',
+                    method: 'post',
+                    data: {
+                        productId
+                    },
+                    success: function (res) {
+                        if (res.success) {
+                            Swal.fire(
+                                'Success',
+                                'Product added to wishlist successfully!',
+                                'success'
+                            );
+                        } else {
+                            Swal.fire(
+                                'Failed',
+                                'Product is already in your wishlist',
+                                'warning'
+                            );
+                        }
+                    }
+                });
+                // alert('over')
+            }
+        }
+    </script>
+
     <script src="/assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="/assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="/assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>

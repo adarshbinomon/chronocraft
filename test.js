@@ -892,3 +892,193 @@
                             </tr>
                             <% } %>
                   </table>
+
+
+
+
+
+
+
+                  <section class="pt-150 pb-150">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 m-auto">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="dashboard-menu">
+                                    <ul class="nav flex-column" role="tablist">
+                                       
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="true"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                        </li>
+                                        <!-- <li class="nav-item">
+                                            <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a>
+                                        </li> -->
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>Account details</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/logout"><i class="fi-rs-sign-out mr-10"></i>Logout</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="tab-content dashboard-content">
+                                    
+                                    <div class="tab-pane fade active show"  id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Your Orders</h5>
+                                            </div>
+                                            <!-- <div class="card-body">
+                                                <form action="/search-orderid?id">
+                                                    <input style="width: 200px;" type="text" name="orderSearch"
+                                                        placeholder="Search order ID" class="form-control bg-white mb-4">
+                                                </form> -->
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Order</th>
+                                                                <th>Date</th>
+                                                                <th>Status</th>
+                                                                <th>Total</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <% for(let i=0;i<orders.length;i++) {  %>
+                                                            <tr>
+                                                                <td><%=String(orders[i]._id).slice(-6)%></td>
+                                                                <td><%= String(orders[i].createdAt).slice(4, 16) %></td>
+                                                                <td><%=orders[i].orderStatus%></td>
+                                                                <td>₹ <%=orders[i].totalAmount%> </td>
+                                                                <td><a href="/order-details/<%=orders[i]._id%>" class="btn-small d-block">View</a></td>
+                                                            </tr>
+                                                            <% } %>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="pagination justify-content-center m-5">
+                                                    <% if (totalPages> 1) { %>
+                                                        <ul class="pagination">
+                                                            <% if (page> 1) { %>
+                                                                <li class="page-item">
+                                                                    <a class="page-link green-pagination-link"
+                                                                        href="?page=<%= page - 1 %>&orderSearch=<%=search%>">Previous</a>
+                                                                </li>
+                                                                <% } %>
+
+                                                                    <% for (let i=1; i <=totalPages; i++) { %>
+                                                                        <li class="page-item">
+                                                                            <% if (i===page) { %>
+                                                                                <span class="page-link">
+                                                                                    <%= i %>
+                                                                                </span>
+                                                                                <% } else { %>
+                                                                                    <a class="page-link green-pagination-link"
+                                                                                        href="?page=<%= i %>">
+                                                                                        <%= i %>
+                                                                                    </a>
+                                                                                    <% } %>
+                                                                        </li>
+                                                                        <% } %>
+
+                                                                            <% if (page < totalPages) { %>
+                                                                                <li class="page-item">
+                                                                                    <a class="page-link green-pagination-link"
+                                                                                        href="?page=<%= page + 1 %>&orderSearch=<%=search%>">Next</a>
+                                                                                </li>
+                                                                                <% } %>
+                                                        </ul>
+                                                        <% } %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Orders tracking</h5>
+                                            </div>
+                                            <div class="card-body contact-from-area">
+                                                <p>To track your order please enter your OrderID in the box below and press "Track" button. This was given to you on your receipt and in the confirmation email you should have received.</p>
+                                                <div class="row">
+                                                    <div class="col-lg-8">
+                                                        <form class="contact-form-style mt-30 mb-50" action="#" method="post">
+                                                            <div class="input-style mb-20">
+                                                                <label>Order ID</label>
+                                                                <input name="order-id" placeholder="Found in your order confirmation email" type="text" class="square">
+                                                            </div>
+                                                            <div class="input-style mb-20">
+                                                                <label>Billing email</label>
+                                                                <input name="billing-email" placeholder="Email you used during checkout" type="email" class="square">
+                                                            </div>
+                                                            <button class="submit submit-auto-width" type="submit">Track</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+                                        <a href="/add-address" class="btn btn-fill-out btn-block mt-30">Add Address</a>
+
+                                        
+                                        <div class="row mt-20">
+                                            <% for (let i = 0; i < userData.address.length; i++) { %>
+                                            <div class="col-lg-6">
+                                                <div class="card mb-3 mb-lg-0">
+                                                    <div class="card-header">
+                                                        <h5 class="mb-0"><%= userData.address[i].addressType %></h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <address><%=userData.address[i].name%><br> <%=userData.address[i].addressLine1%>, <%=userData.address[i].addressLine2%>, <%=userData.address[i].city%><br><%=userData.address[i].state%><br><%=userData.address[i].pinCode%><br><%=userData.address[i].phone%><br><%=userData.address[i].email%></address>
+
+                                                        <a href="/edit-address/<%= i %>" class="btn-small">Edit</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5>Change password</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <form method="post" name="enq">
+                                                    <div class="row">
+                                                        <div class="form-group col-md-12">
+                                                            <label>Current Password <span class="required">*</span></label>
+                                                            <input required="" class="form-control square" name="currentPassword" id="currentPassword" type="password">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>New Password <span class="required">*</span></label>
+                                                            <input required="" class="form-control square" name="newPassword" id="newPassword" type="password">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>Confirm Password <span class="required">*</span></label>
+                                                            <input required="" class="form-control square" name="confirmPassword" id="confirmPassword" type="password">
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <button type="submit" onclick="validatePassword(event)" class="btn btn-fill-out submit" name="submit" value="Submit">Save</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
