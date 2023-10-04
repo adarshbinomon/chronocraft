@@ -44,8 +44,10 @@ user_route.post('/resend-otp',userController.resendOtp)
 user_route.get('/contact',userController.loadContact)
 user_route.post('/search-orderid',userController.orderSearch)
 
-user_route.get('/wishlist',userController.loadWishlist)
+user_route.get('/wishlist',auth.isLogIn,userController.loadWishlist)
 user_route.post('/add-to-wishlist',userController.addToWishlist)
+user_route.post('/wishlist-to-cart',userController.addToCartFromWishlist)
+user_route.post('/delete-wishlist',userController.deleteWishlistItem)
 
 user_route.get('/error',userController.error)
 

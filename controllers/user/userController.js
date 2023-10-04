@@ -694,11 +694,87 @@ const addToWishlist = async (req,res) => {
 
 const addToCartFromWishlist = async (req,res) =>{
     try {
+        console.log(req.body);
+        const productId = req.body.productId;
+        const quantity = 1;
+        console.log('ADDTOCART productId-----'+productId+'   quantity-----' + quantity);
+
+        if(isNaN(quantity) || quantity <= 0){
+            res.status(400).json({ message: 'Invalid quantity' });
+        }
         
+        const userId = req.session.user_id;
+        console.log('ADDTOCART userId------'+userId);
+        const user = await User.findById(userId);
+
+        if(!user){
+            res.status(404).json({message: 'user not found'})
+        }
+
+        const existingItem = user.cart.find((item) => (
+            item.productId.equals(productId)
+          ));
+      
+        if (existingItem) {
+            res.status(200).json({
+                success: false,
+                message: 'item already in cart'
+            })
+        } else {
+            user.cart.push({ productId, quantity });
+            user.wishlist.pull({ productId });
+          }
+      
+          await user.save();
+          console.log(user);
+
+          console.log('product added to cart')
+
+        //   res.redirect('/cart')
+        res.status(200).json({
+            success: true,
+            message: 'item added to cart'
+        });        
     } catch (error) {
         console.log(error.message);
     }
 }
+
+//delete wishlist item
+
+const deleteWishlistItem = async (req, res) => {
+    try {
+      const userId = req.session.user_id;
+      const productIdToDelete = req.body.productId; 
+  
+      console.log('productId to remove'+productIdToDelete);
+      const user = await User.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      console.log('user'+user);
+      user.wishlist = user.wishlist.filter((item) =>
+        !item.productId.equals(productIdToDelete)
+      );
+  
+      await user.save();
+  
+      console.log("Product removed from wishlist");
+  
+      res.status(200).json({
+            success: true,
+            message: 'item removed successfully'
+        })
+    } catch (error) {
+      console.log(error.message);
+      return res.status(500).json({
+            success: false,
+            message: "Internal server error" 
+        });
+    }
+  };
 
 
 
@@ -725,6 +801,8 @@ module.exports = {
     error,
     orderSearch,
     loadWishlist,
-    addToWishlist
+    addToWishlist,
+    addToCartFromWishlist,
+    deleteWishlistItem
     
 };

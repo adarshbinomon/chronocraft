@@ -96,7 +96,9 @@
                         <div class="header-action-icon-2">
                             <a href="shop-wishlist.html">
                                 <img class="svgInject" alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
-                                <span class="pro-count blue">4</span>
+                                <%if(userData) {%>
+                                    <span class="pro-count blue" id="wishlistLength"><%=userData.wishlist?.length%></span>
+                                <% } %>
                             </a>
                         </div>
                         <div class="header-action-icon-2">

@@ -201,6 +201,9 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="table-responsive">
+                            <%if(userData?.cart.length===0){%>
+                                <h3>Oops! Cart empty.</h3>
+                                <%}else{%>
                             <table class="table shopping-summery text-center clean">
                                 <thead>
                                     <tr class="main-heading">
@@ -282,6 +285,7 @@
                                     </tr> -->
                                 </tbody>
                             </table>
+                            <%}%>
                         </div>
                         <div class="cart-action text-end">
                             <!-- <a class="btn  mr-10 mb-sm-15"><i class="fi-rs-shuffle mr-10"></i>Update Cart</a> -->
