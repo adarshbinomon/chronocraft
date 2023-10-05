@@ -890,7 +890,7 @@
                               <td><%= products[i].quantity %></td>
                               <td> <div class="d-flex"><a href="/admin/edit-product/<%=products[i]._id%>" class="btn-sm btn-info me-auto">Edit</a> <a type="button" href="/admin/delete-product/<%=products[i]._id%>" class="btn-sm btn-danger">Delete</a></div>
                             </tr>
-                            <% } %>
+                     ̰     <% } %>
                   </table>
 
 

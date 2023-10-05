@@ -391,9 +391,9 @@
                 method : "post",
                 data : formData,
                 success : function(res) {
-                    if(res.success){
+                     if(res.success){
                         var options = {
-                            "key":""+res.key_id+"",
+                            "key":"rzp_test_7ETyzh4jBTZxal",
                             "amount" : ""+res.amount+"",
                             "currency" : "INR",
                             "order_id" : ""+res.order_id+"",
@@ -403,7 +403,7 @@
                                 // alert(res.reciept)
                                 // alert("payment success")
                                 verifyPayment(response, res.order_id ,res.reciept)
-                                window.open("/order-success", "_self")
+                                // window.open("/order-success", "_self")
 
                             },
                             "prefill" : {
@@ -424,8 +424,16 @@
                         // alert(res.msg)
                     }
                     if (res.status) {
-                            window.open("/order-success", "_self")
-                        } 
+                        Swal.fire({
+                        title: 'Order Placed Successfully!',
+                        text: 'View your orders',
+                        icon: 'success',
+                        showConfirmButton: true,
+                        confirmButtonText: "View order"
+                    }).then(function () {
+                        window.location.href = "http://localhost:3000/account"
+
+                    })                        } 
                 }
             })
         })
@@ -454,7 +462,7 @@
                         showConfirmButton: true,
                         confirmButtonText: "View order"
                     }).then(function () {
-                        // window.location.href = "http://localhost:3000/account"
+                        window.location.href = "http://localhost:3000/account"
 
                     })
                 }
