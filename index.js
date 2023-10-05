@@ -6,6 +6,9 @@ const nocache = require('nocache');
 const path = require('path');
 const mongoose = require('mongoose');
 const { get } = require('http');
+const dotenv = require('dotenv');
+dotenv.config({path: '.env'})
+
 
 const app = express();
 
@@ -41,4 +44,6 @@ app.listen(3000,()=>{
 
 //connect database
 
-mongoose.connect('mongodb://127.0.0.1:27017/eCommerce')
+mongoose.connect(process.env.MONGODB_URL).then(()=>{
+    console.log('connected to mongoDB ');
+})
