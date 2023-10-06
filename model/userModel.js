@@ -76,14 +76,9 @@ const userSchema = new mongoose.Schema({
    
    address: [addressSchema],
 
-   wallet: {
-    type: Number,
-    min: 0,
-    max: 100000,
-    default: 0
-   },
 
-   walletTransaction: [{
+
+   wallet: [{
       orderId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'order'

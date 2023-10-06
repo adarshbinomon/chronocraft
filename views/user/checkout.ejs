@@ -210,7 +210,7 @@
                             <div class="col-lg-6">
                                 <div class="card mb-3 mb-lg-0">
                                     <div class="card-header">
-                                        <input class="form-check-input" value="<%=JSON.stringify(user.address[i] )%>" type="radio" name="address" id="address">
+                                        <input class="form-check-input" value="<%=JSON.stringify(user.address[i] )%>" type="radio" name="address" id="address" required <%=i===0 ? 'checked' : '' %>>
                                         <label class="form-check-label" for="flexRadioDefault1">
                                                 <h5 class="mb-0"> <%= user.address[i].addressType %></h5>
                                             </label>

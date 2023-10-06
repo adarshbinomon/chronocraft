@@ -255,7 +255,31 @@ const cancelOrder = async (req, res) => {
     const update = {
       orderStatus: "CANCELLED",
     };
-    const order = await Order.findByIdAndUpdate(id, update);
+    const order = await Order.findById(id);
+    const orderUpdate = await Order.findByIdAndUpdate(id, update);
+    const user = await User.findById(req.session.user_id);
+
+    if (order) {
+      for (const orderItem of order.products) {
+        const product = await Product.findById(orderItem.productId);
+
+        let transaction = {
+          orderId: order._id,
+          amount: order.totalAmount,
+          transactionType: "CREDIT",
+          remarks: "CANCELLED",
+        };
+    
+        user.wallet.push(transaction);
+        await user.save();
+
+        if (product) {
+          product.quantity += orderItem.quantity;
+          await product.save();
+          console.log("quantity increased");
+        }
+      }
+    }
 
     res.redirect("/account");
   } catch (error) {
@@ -287,15 +311,32 @@ const returnProduct = async (req, res) => {
       { _id: new mongoose.Types.ObjectId(id) },
       { $set: { returnReason: reason, orderStatus: "RETURNED" } }
     ).lean();
+    const user = await User.findById(req.session.user_id)
 
-    for (const item of order.products) {
-      const product = await Product.findById(item.productId);
+    if (order) {
+      for (const orderItem of order.products) {
+        const product = await Product.findById(orderItem.productId);
 
-      if (product) {
-        product.stock += item.quantity;
-        await product.save();
+        if (product) {
+          product.quantity += orderItem.quantity;
+          await product.save();
+          console.log("quantity increased");
+        }
       }
+      
+      let transaction = {
+        orderId: order._id,
+        amount: order.totalAmount,
+        transactionType: "CREDIT",
+        remarks: "RETURNED",
+      };
+  
+      user.wallet.push(transaction);
+      await user.save();
+
     }
+
+
     return res.status(200).json({ success: true });
   } catch (error) {
     console.log(error.message);

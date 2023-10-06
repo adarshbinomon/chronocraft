@@ -1,5 +1,6 @@
 const Order = require('../../model/orderModel')
 const User = require('../../model/userModel')
+const Product = require('../../model/productModel')
 
 //load orders
 
@@ -34,9 +35,22 @@ const changeStatus = async (req, res) => {
         console.log(req.body.status);
         const id = req.body.id;
         console.log(id);
+        const order = await Order.findById(id);
         await Order.findByIdAndUpdate(id, { orderStatus: req.body.status });
         if(req.body.status === "DELIVERED"){
             await Order.findByIdAndUpdate(id, { deliveredOn: new Date() });
+        }else if(req.body.status === "CANCELLED"){
+            if (order) {
+                for (const orderItem of order.products) {
+                  const product = await Product.findById(orderItem.productId);
+          
+                  if (product) {
+                    product.quantity += orderItem.quantity;
+                    await product.save();
+                    console.log("quantity increased");
+                  }
+                }
+              }
         }
         res.redirect(`/admin/order-details/${id}`);
     } catch (error) {

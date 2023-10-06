@@ -140,8 +140,32 @@ const deleteCartItem = async (req, res) => {
     const userCart = await User.findOne({_id: req.session.user_id}).populate('cart.productId')
     const categories = await Category.find();
 
+    userData
+    .aggregate([
+      {
+        $match: { _id: userData._id }, // Match the user by _id
+      },
+      {
+        $unwind: '$wallet', // Unwind the 'wallet' array to work with individual transactions
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: '$wallet.amount' }, // Calculate the sum of 'amount' values
+        },
+      },
+    ])
+    .exec((aggErr, result) => {
+      if (aggErr) {
+        console.error('Aggregation Error:', aggErr);
+        return;
+      }
 
-
+      if (result && result.length > 0) {
+        const totalAmount = result[0].totalAmount;
+        console.log('Total Amount in Wallet:', totalAmount);
+      }
+    })
     // console.log(user);
     console.log(userCart);
 
