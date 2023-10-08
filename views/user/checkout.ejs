@@ -444,7 +444,7 @@
                         showConfirmButton: true,
                         confirmButtonText: "View order"
                     }).then(function () {
-                        window.location.href = `http://localhost:3000/order-details/${res.orderId}`
+                        window.location.href = `/order-details/${res.orderId}`
 
                     })                        } 
                 }
@@ -475,7 +475,7 @@
                         showConfirmButton: true,
                         confirmButtonText: "View order"
                     }).then(function () {
-                        window.location.href = `http://localhost:3000/order-details/${orderId}`
+                        window.location.href = `/order-details/${orderId}`
 
                     })
                 }
