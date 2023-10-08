@@ -318,7 +318,8 @@
                                             <p class="text-muted mt-5">Please send your cheque to Store Name, Store Street, Store Town, Store State / County, Store Postcode. </p>
                                         </div>
                                     </div>
-                                    <div class="custome-radio">
+                                    
+                                    <div class="custome-radio" <% if (!walletBalance) { %> style="display: none;" <% } %>>
                                         <input class="form-check-input" required="" type="radio" name="payment_option" id="exampleRadios5" value="WALLET" >
                                         <label class="form-check-label" for="exampleRadios5" data-bs-toggle="collapse" data-target="#wallet" aria-controls="checkPayment"  >Wallet balance: <%=walletBalance%></label>
                                         
@@ -396,6 +397,13 @@
                 method : "post",
                 data : formData,
                 success : function(res) {
+                    if(res.lowWalletBalance){
+                        Swal.fire(
+                            'Oops!',
+                            'Insufficient balance in wallet!',
+                            'warning'
+                            )
+                    }
                      if(res.success){
                         var options = {
                             "key":"rzp_test_7ETyzh4jBTZxal",
@@ -436,7 +444,7 @@
                         showConfirmButton: true,
                         confirmButtonText: "View order"
                     }).then(function () {
-                        window.location.href = "http://localhost:3000/account"
+                        window.location.href = `http://localhost:3000/order-details/${res.orderId}`
 
                     })                        } 
                 }
@@ -467,7 +475,7 @@
                         showConfirmButton: true,
                         confirmButtonText: "View order"
                     }).then(function () {
-                        window.location.href = "http://localhost:3000/account"
+                        window.location.href = `http://localhost:3000/order-details/${orderId}`
 
                     })
                 }

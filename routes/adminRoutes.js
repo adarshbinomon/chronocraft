@@ -58,7 +58,7 @@ admin_route.use(session({
   const productUpload = multer({storage : productStorage})
 
 
-  //routes
+//paths
 admin_route.set('view engine', 'ejs');
 admin_route.set('views','./views/admin')
   
@@ -81,6 +81,8 @@ admin_route.get('/login',auth.isLogOut,adminController.loadLogin)
 admin_route.get('/',auth.isLogIn,adminController.loadDashboard)
 admin_route.get('/logout',auth.isLogIn,adminController.logOut)
 admin_route.post('/login',adminController.adminLogin)
+admin_route.get('/create-report',adminController.generateReport)
+
 
 
 admin_route.get('/categories',auth.isLogIn,categoryController.loadCategories)

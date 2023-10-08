@@ -56,6 +56,36 @@ const checkout = async (req, res) => {
         { users: { $nin: [req.session.user_id] } },
       ],
     });
+    const walletResult = await User.aggregate([
+      {
+        $match: { _id: user._id }, // Match the user by _id
+      },
+      {
+        $unwind: "$wallet", // Unwind the 'wallet' array to work with individual transactions
+      },
+      {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$wallet.amount" }, // Calculate the sum of 'amount' values
+        },
+      },
+    ]).exec();
+
+    let walletBalance;
+
+    if (walletResult && walletResult.length > 0) {
+      walletBalance = walletResult[0].totalAmount.toLocaleString("en-IN", {
+        style: "currency",
+        currency: "INR", // You can change 'USD' to 'INR' for Indian Rupees
+      });
+      console.log("Total Amount in Wallet:", walletBalance);
+    } else {
+      console.log("No wallet transactions found.");
+    }
+
+    req.session.returnTo1 = "/checkout";
+
+    console.log("walletout", walletBalance);
 
     let discount = 0;
     let newTotal = req.body.total;
@@ -116,16 +146,6 @@ const checkout = async (req, res) => {
     console.log(orderId);
 
     if (orderSuccess) {
-      for (const cartItem of user.cart) {
-        const product = await Product.findById(cartItem.productId);
-
-        if (product) {
-          product.quantity -= cartItem.quantity;
-          await product.save();
-          console.log("quantity decreased");
-        }
-      }
-
       // Make the cart empty
       await User.updateOne({ _id: userId }, { $unset: { cart: 1 } });
 
@@ -134,25 +154,47 @@ const checkout = async (req, res) => {
           { _id: new mongoose.Types.ObjectId(orderId) },
           { $set: { orderStatus: "PLACED" } }
         );
+        for (const cartItem of user.cart) {
+          const product = await Product.findById(cartItem.productId);
+  
+          if (product) {
+            product.quantity -= cartItem.quantity;
+            await product.save();
+            console.log("quantity decreased");
+          }
+        }
+  
         res.status(200).json({
           status: true,
           msg: "Order created for COD",
+          orderId: orderId
         });
       } else if (req.body.payment_option === "razorpay") {
         console.log("razorpay");
 
-        const amount = total * 100; // Amount in paise
+        const amount = total * 100;
         const options = {
           amount: amount,
           currency: "INR",
           receipt: String(orderId),
         };
 
+        for (const cartItem of user.cart) {
+          const product = await Product.findById(cartItem.productId);
+  
+          if (product) {
+            product.quantity -= cartItem.quantity;
+            await product.save();
+            console.log("quantity decreased");
+          }
+        }
+
         // Create a Razorpay order
         razorpay.orders.create(options, (err, order) => {
           if (!err) {
             console.log("Razorpay order created");
             console.log(orderId);
+            
 
             // Send Razorpay response to the client
             res.status(200).send({
@@ -165,6 +207,7 @@ const checkout = async (req, res) => {
               contact: "9876543210",
               name: "admin",
               email: "admin@gmail.com",
+              orderId: orderId
             });
           } else {
             console.error("Razorpay order creation failed:", err);
@@ -173,6 +216,50 @@ const checkout = async (req, res) => {
               .send({ success: false, msg: "Something went wrong!" });
           }
         });
+      }else if(req.body.payment_option === "WALLET"){
+        console.log(walletResult[0].totalAmount);
+        console.log(order.totalAmount);
+        if(walletResult[0].totalAmount<order.totalAmount){
+          console.log('if');
+          res.status(200).json({
+            lowWalletBalance: true,
+            message: 'bill amount exceed wallet balance'
+          })
+        }else{
+          console.log('else');
+          let transaction = {
+            orderId: orderId,
+            amount: -order.totalAmount,
+            transactionType: "DEBIT",
+            remarks: "CHECKOUT",
+          };
+      
+          user.wallet.push(transaction);
+          await user.save();
+          
+          await Order.updateOne(
+            { _id: new mongoose.Types.ObjectId(orderId) },
+            { $set: {
+              orderStatus: "PLACED",
+              paymentStatus: "RECIEVED" } }
+          );
+          for (const cartItem of user.cart) {
+            const product = await Product.findById(cartItem.productId);
+    
+            if (product) {
+              product.quantity -= cartItem.quantity;
+              await product.save();
+              console.log("quantity decreased");
+            }
+          }
+
+          res.status(200).json({
+            status: true,
+            msg: 'order created using wallet',
+            orderId: orderId
+          })
+
+        }
       }
     }
   } catch (error) {

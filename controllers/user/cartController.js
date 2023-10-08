@@ -168,7 +168,7 @@ const loadCheckout = async (req, res) => {
     let walletBalance;
 
     if (walletResult && walletResult.length > 0) {
-      walletBalance = walletResult[0].totalAmount.toLocaleString("en", {
+      walletBalance = walletResult[0].totalAmount.toLocaleString("en-IN", {
         style: "currency",
         currency: "INR", // You can change 'USD' to 'INR' for Indian Rupees
       });

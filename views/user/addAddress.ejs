@@ -267,6 +267,44 @@
         </div>
     </div>
     <!-- Vendor JS-->
+    <script>
+        function validateForm() {
+            // Get input values
+            const name = document.getElementById('name').value.trim();
+            const addressLine1 = document.getElementById('addressLine1').value.trim();
+            // Add more variables for other fields as needed
+        
+            // Validate required fields
+            if (name === '') {
+                alert('Name is required');
+                return false;
+            }
+        
+            if (addressLine1 === '') {
+                alert('Address is required');
+                return false;
+            }
+        
+            // Add more validation rules for other fields as needed
+        
+            // If all validation checks pass, the form will submit
+            return true;
+        }
+        </script>
+        In this code:
+        
+        Each input field has an id attribute that corresponds to its id in the JavaScript code.
+        The onsubmit attribute in the <form> element calls the validateForm() function when the form is submitted.
+        The validateForm() JavaScript function retrieves the values of the input fields and performs basic validation checks.
+        If any required field is empty, it displays an alert message and returns false to prevent form submission.
+        You can add more validation checks for other fields, such as checking for a valid email format or phone number format.
+        This is a simple client-side validation example. Remember that client-side validation should be supplemented with server-side validation to ensure the data's integrity and security. Server-side validation is essential to prevent malicious or incorrect data from being submitted to your server.
+        
+        
+        
+        
+        
+        
     <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-migrate-3.3.0.min.js"></script>

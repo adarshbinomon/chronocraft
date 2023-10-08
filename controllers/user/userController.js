@@ -288,7 +288,7 @@ const loadaccount = async (req,res)=>{
         const count = await Order.find({
           customerId: req.session.user_id,
         }).countDocuments();
-    
+
         const orderData = Order.find({ customerId: req.session.user_id }).sort({
           createdAt: -1,
         });
@@ -296,6 +296,35 @@ const loadaccount = async (req,res)=>{
     
         const userData = await User.findById(req.session.user_id);
         const categories = await Category.find();
+        
+        const walletResult = await User.aggregate([
+            {
+              $match: { _id: userData._id }, 
+            },
+            {
+              $unwind: "$wallet", 
+            },
+            {
+              $group: {
+                _id: null,
+                totalAmount: { $sum: "$wallet.amount" },
+              },
+            },
+          ]).exec();
+      
+          let walletBalance;
+      
+          if (walletResult && walletResult.length > 0) {
+            walletBalance = walletResult[0].totalAmount.toLocaleString("en-IN", {
+              style: "currency",
+              currency: "INR",
+            });
+            console.log("Total Amount in Wallet:", walletBalance);
+          } else {
+            console.log("No wallet transactions found.");
+          }
+
+    
         // console.log(userData.address[0].city);
     
         res.render("userAccount", {
@@ -307,6 +336,7 @@ const loadaccount = async (req,res)=>{
           page: page,
           limit: limit,
           search: search,
+          walletBalance: walletBalance
         });
     } catch (error) {
         console.log(error.message);

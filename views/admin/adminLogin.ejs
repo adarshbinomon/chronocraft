@@ -22,12 +22,12 @@
             <div class="card mx-auto card-login">
                 <div class="card-body">
                     <h4 class="card-title mb-4">Sign in</h4>
-                    <form method="post">
+                    <form id="login" method="post">
                         <div class="mb-3">
-                            <input class="form-control" placeholder="Username or email" type="text" value="adarshbinomon.1@gmail.com" name="email">
+                            <input id="email" class="form-control" placeholder="Username or email" type="text" value="adarshbinomon.1@gmail.com" name="email">
                         </div> <!-- form-group// -->
                         <div class="mb-3">
-                            <input class="form-control" placeholder="Password" type="password" value="1234" name="password">
+                            <input id="password" class="form-control" placeholder="Password" type="password" value="1234" name="password">
                         </div> <!-- form-group// -->
                         <div class="mb-3">
                             <a href="#" class="float-end font-sm text-muted">Forgot password?</a>
@@ -47,6 +47,7 @@
        <%- include('partials/footer')%>
        <!-- footer -->
     </main>
+    <script src="/assetsbackend/js/loginvalidation"></script>
     <script src="/assetsbackend/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/assetsbackend/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/assetsbackend/js/vendors/jquery.fullscreen.min.js"></script>
