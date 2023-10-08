@@ -329,7 +329,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <% for(let i=0;i<userData.wallet.length;i++) {  %>
+                                                        <% for(let i=userData.wallet.length-1;i>=0;i--) {  %>
                                                         <tr>
                                                             <td><%=String(userData.wallet[i]._id).slice(-6)%></td>
                                                             <td><%= String(userData.wallet[i].createdOn).slice(4, 16) %></td>
