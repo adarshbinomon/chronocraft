@@ -228,9 +228,9 @@
                                         <td class="price" data-title="Price"><span>₹ <%= userCart.cart[i].productId.salePrice %> </span></td>
                                         <td class="text-center" data-title="Stock">
                                             <div class=" radius  m-auto">
-                                                <a class="btn px-2 py-0" onclick="changeQuantity('<%=userCart.cart[i].productId._id%>',-1,'<%= userCart.cart[i].productId.salePrice %>','subtot-<%= i %>','cartSubTotal','total','qty-<%= userCart.cart[i].productId._id %>')" >-</a>
+                                                <a class="btn px-2 py-0" onclick="changeQuantity('<%=userCart.cart[i].productId._id%>',-1,'<%= userCart.cart[i].productId.salePrice %>','subtot-<%= i %>','cartSubTotal','total','qty-<%= userCart.cart[i].productId._id %>','<%= userCart.cart[i].productId.quantity %>')" >-</a>
                                                 <span id="qty-<%= userCart.cart[i].productId._id %>" class="qty-val mx-3"><%= userCart.cart[i].quantity %></span>
-                                                <a class="btn px-2 py-0" onclick="changeQuantity('<%=userCart.cart[i].productId._id%>',1,'<%= userCart.cart[i].productId.salePrice %>','subtot-<%= i %>','cartSubTotal','total','qty-<%= userCart.cart[i].productId._id %>')" >+</a>
+                                                <a class="btn px-2 py-0" onclick="changeQuantity('<%=userCart.cart[i].productId._id%>',1,'<%= userCart.cart[i].productId.salePrice %>','subtot-<%= i %>','cartSubTotal','total','qty-<%= userCart.cart[i].productId._id %>','<%= userCart.cart[i].productId.quantity %>')" >+</a>
                                             </div>
                                         </td>
                                         <td class="text-right" data-title="Cart">
@@ -385,12 +385,24 @@
 
     
     <script>
-    function changeQuantity(productId,count,price,subTotal,cartSubTotal,total,quantity){
+    function changeQuantity(productId,count,price,subTotal,cartSubTotal,total,quantity,stock){
         console.log(productId,count,price,subTotal,cartSubTotal,total,quantity);
         const subtotalValue = document.getElementById(subTotal).innerHTML
         const grandTotalValue = document.getElementById('grandTotal').innerHTML
         const quantityValue = document.getElementById(quantity).innerHTML
         let totalValue = parseInt(subtotalValue)
+
+        if (parseInt(quantityValue) + count > parseInt(stock)) {
+
+if (count === 1) {
+    Swal.fire(
+        'Alert',
+        'Insufficient Stock',
+        'error'
+    );
+    return
+}
+}
        
         console.log(quantityValue,count);
         if(quantityValue == 1 && count == -1){
