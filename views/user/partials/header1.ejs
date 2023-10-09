@@ -32,7 +32,7 @@
                                     <li><a href="#"><img src="assets/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
                                 </ul>
                             </li>
-                            <% if(typeof userData !== 'undefined') { %>
+                            <% if(userData) { %>
                                 <li>
                                     <a class="language-dropdown-active" href="#"> <i class="fi-rs-user"></i> <%=userData?.name%> <i class="fi-rs-angle-small-down"></i></a>
                                     <ul class="language-dropdown">

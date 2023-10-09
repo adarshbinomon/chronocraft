@@ -220,8 +220,8 @@
                                     <% for(var i=0;i<userCart.cart.length;i++) { %>
                                     <tr>
                                         <td class="image product-thumbnail"><img src="/assetsbackend/imgs/products/<%=userCart.cart[i].productId.image[0]%>" alt="#"></td>
-                                        <td class="product-des product-name">
-                                            <h5 class="product-name"><a href="shop-product-right.html"><%= userCart.cart[i].productId.productName %></a></h5>
+                                        <td class="product-des -name">
+                                            <h5 class="product-name"><a href="/product/<%=userCart.cart[i].productId._id%>"><%= userCart.cart[i].productId.productName %></a></h5>
                                             <p class="font-xs"><%= userCart.cart[i].productId.brandName %>
                                             </p>
                                         </td>
