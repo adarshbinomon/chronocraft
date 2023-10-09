@@ -128,7 +128,7 @@ const updateCategory = async (req,res)=>{
             name: req.body.name,
             isListed: req.body.isListed,
             description: req.body.description
-            }
+            }                                  
         }
         console.log(data); 
         await Category.findByIdAndUpdate(id,data)
