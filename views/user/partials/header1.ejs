@@ -32,20 +32,24 @@
                                     <li><a href="#"><img src="assets/imgs/theme/flag-ru.png" alt="">Pусский</a></li>
                                 </ul>
                             </li>
-                            <% if(userData) { %>
+                            <% if(typeof userData !== 'undefined') { %>
+                                <!-- If the 'userData' variable is defined -->
                                 <li>
-                                    <a class="language-dropdown-active" href="#"> <i class="fi-rs-user"></i> <%=userData?.name%> <i class="fi-rs-angle-small-down"></i></a>
+                                    <a class="language-dropdown-active" href="#">
+                                        <i class="fi-rs-user"></i> <%=userData?.name%> <i class="fi-rs-angle-small-down"></i>
+                                    </a>
                                     <ul class="language-dropdown">
                                         <li><a href="/account">Account</a></li>
                                         <li><a href="#">Settings</a></li>
-                                        
                                     </ul>
                                 </li>
                                 <li><i class="fi-rs-user"></i><a href="/logout">Log Out</a></li>
-                                <% } else { %>
+                            <% } else { %>
+                                <!-- If the 'userData' variable is not defined -->
                                 <li><i class="fi-rs-user"></i><a href="/signup">Sign Up</a></li>
                                 <li><i class="fi-rs-user"></i><a href="/login">Log In</a></li>
-                            <% } %>                        </ul>
+                            <% } %>
+                                    </ul>
                     </div>
                 </div>
             </div>
@@ -96,7 +100,7 @@
                         <div class="header-action-icon-2">
                             <a href="shop-wishlist.html">
                                 <img class="svgInject" alt="Evara" src="assets/imgs/theme/icons/icon-heart.svg">
-                                <%if(userData?) {%>
+                                <%if(userData) {%>
                                     <span class="pro-count blue" id="wishlistLength"><%=userData.wishlist?.length%></span>
                                 <% } %>
                             </a>
