@@ -83,7 +83,7 @@ const loadDashboard = async (req, res) => {
         },
       },
     ]);
-    const mRevenue = monthlyRevenue[0].total.toLocaleString("en-IN");
+    const mRevenue = monthlyRevenue[0]?.total.toLocaleString("en-IN") || 0 ;
 
     //graph1
 
