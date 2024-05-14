@@ -4,7 +4,7 @@ const Category = require("../../model/categoryModel");
 const Order = require("../../model/orderModel");
 const Coupon = require("../../model/couponModel");
 
-//load cart
+//load cart ̰
 
 const loadCart = async (req, res) => {
   try {

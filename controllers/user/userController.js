@@ -93,7 +93,7 @@ const addUser = async (req, res) => {
       res.render("signup", {
         message: "email already registered, try logging in.",
         categories: categories,
-        userData: userData
+        userData: userData,
       });
     } else {
       if (userDetails) {

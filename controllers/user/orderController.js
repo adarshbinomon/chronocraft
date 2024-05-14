@@ -16,7 +16,6 @@ const razorpay = new Razorpay({
   key_id: process.env.key_id,
   key_secret: process.env.key_secret,
 });
-
 //load order details page
 
 const loadOrderDetails = async (req, res) => {
@@ -156,18 +155,18 @@ const checkout = async (req, res) => {
         );
         for (const cartItem of user.cart) {
           const product = await Product.findById(cartItem.productId);
-  
+
           if (product) {
             product.quantity -= cartItem.quantity;
             await product.save();
             console.log("quantity decreased");
           }
         }
-  
+
         res.status(200).json({
           status: true,
           msg: "Order created for COD",
-          orderId: orderId
+          orderId: orderId,
         });
       } else if (req.body.payment_option === "razorpay") {
         console.log("razorpay");
@@ -181,7 +180,7 @@ const checkout = async (req, res) => {
 
         for (const cartItem of user.cart) {
           const product = await Product.findById(cartItem.productId);
-  
+
           if (product) {
             product.quantity -= cartItem.quantity;
             await product.save();
@@ -194,7 +193,6 @@ const checkout = async (req, res) => {
           if (!err) {
             console.log("Razorpay order created");
             console.log(orderId);
-            
 
             // Send Razorpay response to the client
             res.status(200).send({
@@ -207,7 +205,7 @@ const checkout = async (req, res) => {
               contact: "9876543210",
               name: "admin",
               email: "admin@gmail.com",
-              orderId: orderId
+              orderId: orderId,
             });
           } else {
             console.error("Razorpay order creation failed:", err);
@@ -216,36 +214,39 @@ const checkout = async (req, res) => {
               .send({ success: false, msg: "Something went wrong!" });
           }
         });
-      }else if(req.body.payment_option === "WALLET"){
+      } else if (req.body.payment_option === "WALLET") {
         console.log(walletResult[0].totalAmount);
         console.log(order.totalAmount);
-        if(walletResult[0].totalAmount<order.totalAmount){
-          console.log('if');
+        if (walletResult[0].totalAmount < order.totalAmount) {
+          console.log("if");
           res.status(200).json({
             lowWalletBalance: true,
-            message: 'bill amount exceed wallet balance'
-          })
-        }else{
-          console.log('else');
+            message: "bill amount exceed wallet balance",
+          });
+        } else {
+          console.log("else");
           let transaction = {
             orderId: orderId,
             amount: -order.totalAmount,
             transactionType: "DEBIT",
             remarks: "CHECKOUT",
           };
-      
+
           user.wallet.push(transaction);
           await user.save();
-          
+
           await Order.updateOne(
             { _id: new mongoose.Types.ObjectId(orderId) },
-            { $set: {
-              orderStatus: "PLACED",
-              paymentStatus: "RECIEVED" } }
+            {
+              $set: {
+                orderStatus: "PLACED",
+                paymentStatus: "RECIEVED",
+              },
+            }
           );
           for (const cartItem of user.cart) {
             const product = await Product.findById(cartItem.productId);
-    
+
             if (product) {
               product.quantity -= cartItem.quantity;
               await product.save();
@@ -255,10 +256,9 @@ const checkout = async (req, res) => {
 
           res.status(200).json({
             status: true,
-            msg: 'order created using wallet',
-            orderId: orderId
-          })
-
+            msg: "order created using wallet",
+            orderId: orderId,
+          });
         }
       }
     }
@@ -356,7 +356,7 @@ const cancelOrder = async (req, res) => {
           transactionType: "CREDIT",
           remarks: "CANCELLED",
         };
-    
+
         user.wallet.push(transaction);
         await user.save();
 
@@ -398,7 +398,7 @@ const returnProduct = async (req, res) => {
       { _id: new mongoose.Types.ObjectId(id) },
       { $set: { returnReason: reason, orderStatus: "RETURNED" } }
     ).lean();
-    const user = await User.findById(req.session.user_id)
+    const user = await User.findById(req.session.user_id);
 
     if (order) {
       for (const orderItem of order.products) {
@@ -410,19 +410,17 @@ const returnProduct = async (req, res) => {
           console.log("quantity increased");
         }
       }
-      
+
       let transaction = {
         orderId: order._id,
         amount: order.totalAmount,
         transactionType: "CREDIT",
         remarks: "RETURNED",
       };
-  
+
       user.wallet.push(transaction);
       await user.save();
-
     }
-
 
     return res.status(200).json({ success: true });
   } catch (error) {
