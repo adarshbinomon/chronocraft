@@ -27,5 +27,5 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: cd /home/ubuntu/chronocraft
-    - run: git pull
+    - run: git pull https://github.com/adarshbinomon/chronocraft.git
     - run: cd ..
