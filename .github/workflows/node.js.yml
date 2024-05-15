@@ -26,9 +26,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: cd ..
-    - run: cd ..
-    - run: cd ..
-    - run: cd chronocraft
+    - run: cd /home/ubuntu/chronocraft
     - run: git pull
     - run: cd ..
